@@ -65,7 +65,7 @@ export function Hero() {
     <section
       id="hero"
       className="relative flex flex-col justify-end overflow-hidden"
-      style={{ minHeight: '100svh', paddingTop: 'clamp(80px, 11vh, 140px)' }}
+      style={{ minHeight: '100dvh', paddingTop: 'clamp(80px, 11vh, 140px)' }}
     >
       {/* Dynamic Grid Layer - Audio Reactive */}
       <motion.div 
@@ -115,7 +115,7 @@ export function Hero() {
                 animate={{ scale: 1, opacity: 0.6 }}
                 className="w-[6px] h-[6px] rounded-full bg-[var(--accent)] shadow-[0_0_8px_var(--accent)]" 
               />
-              <div className="relative h-[18px] w-[210px] overflow-hidden translate-y-[0.5px]">
+              <div className="relative h-[18px] w-[min(210px,55vw)] overflow-hidden translate-y-[0.5px]">
                 <AnimatePresence mode="popLayout">
                   <motion.span
                     key={roleIndex}
@@ -212,13 +212,13 @@ export function Hero() {
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 }
             }}
-            className="mt-7 flex flex-col sm:flex-row items-center gap-8"
+            className="mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-6 sm:gap-8 w-full sm:w-auto"
           >
             <motion.button 
               onClick={scrollToContact} 
               whileHover={{ y: -3, scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
-              className="btn-cta bg-[var(--accent)] text-black px-10 py-4 h-[56px] group transition-all duration-400"
+              className="btn-cta bg-[var(--accent)] text-black px-6 sm:px-10 py-4 h-[56px] group transition-all duration-400 w-full sm:w-auto"
               style={{ 
                 border: 'none',
                 boxShadow: '0 4px 14px 0 var(--accent-dim)'
@@ -229,7 +229,7 @@ export function Hero() {
                 <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
               </span>
             </motion.button>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 justify-start">
               {[
                 { icon: Github, url: 'https://github.com/phnxsahil' },
                 { icon: Twitter, url: 'https://x.com/theonlysahil1' },

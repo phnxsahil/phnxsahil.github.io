@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useLocation, useNavigate } from 'react-router';
 import { Hero } from '../components/Hero';
 import { Ticker } from '../components/Ticker';
 import { About } from '../components/About';
@@ -13,6 +14,8 @@ import { Contact } from '../components/Contact';
 
 export default function HomePage() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -39,6 +42,23 @@ export default function HomePage() {
       }
     }
   };
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    const scrollTarget = (location.state as { scrollTarget?: string } | null)?.scrollTarget;
+    if (!scrollTarget) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      const element = document.getElementById(scrollTarget);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      navigate(location.pathname, { replace: true, state: null });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [isLoaded, location.pathname, location.state, navigate]);
 
   return (
     <>

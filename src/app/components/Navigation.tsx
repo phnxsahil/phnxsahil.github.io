@@ -8,6 +8,13 @@ interface NavigationProps {
   toggleDark: () => void;
 }
 
+interface NavItem {
+  label: string;
+  id?: string;
+  path?: string;
+  type: 'scroll' | 'link';
+}
+
 export function Navigation({ isDark, toggleDark }: NavigationProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -32,15 +39,15 @@ export function Navigation({ isDark, toggleDark }: NavigationProps) {
     return () => window.removeEventListener('keydown', handleEscape);
   }, []);
 
-  const handleNavClick = (item: any) => {
+  const handleNavClick = (item: NavItem) => {
     if (item.type === 'link') {
-      navigate(item.path);
+      navigate(item.path!);
       setIsMobileMenuOpen(false);
     } else {
       if (location.pathname !== '/') {
-        navigate(`/#${item.id}`);
+        navigate('/', { state: { scrollTarget: item.id } });
       } else {
-        const element = document.getElementById(item.id);
+        const element = document.getElementById(item.id!);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' });
         }

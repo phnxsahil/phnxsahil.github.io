@@ -1,10 +1,29 @@
 import { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route } from 'react-router';
+import { HashRouter, Routes, Route, useLocation } from 'react-router';
 import { Navigation } from './components/Navigation';
 import { Footer } from './components/Footer';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
+
+function RouteEffects() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const previous = window.history.scrollRestoration;
+    window.history.scrollRestoration = 'manual';
+
+    return () => {
+      window.history.scrollRestoration = previous;
+    };
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [location.pathname]);
+
+  return null;
+}
 
 export default function App() {
   const [isDark, setIsDark] = useState<boolean>(() => {
@@ -27,6 +46,7 @@ export default function App() {
 
   return (
     <HashRouter>
+      <RouteEffects />
       <div
         className="min-h-screen transition-colors duration-300 relative"
         style={{

@@ -19,7 +19,7 @@ export function Footer() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-24">
+        <div className="mb-24 grid grid-cols-1 gap-16 md:grid-cols-2">
           <div className="flex flex-col gap-8">
             <h2 className="section-title text-[clamp(40px,5vw,72px)] leading-none text-[var(--accent)]">
               STAY IN <br/>TOUCH.
@@ -51,7 +51,7 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="flex flex-col justify-between items-end">
+          <div className="flex flex-col justify-between items-start gap-10 md:items-end">
             <button 
               onClick={scrollToTop}
               className="group flex flex-col items-center gap-3 text-[var(--muted2)] hover:text-[var(--accent)] transition-colors uppercase font-mono text-[9px] tracking-[0.3em]"
@@ -72,14 +72,14 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8 pt-12 border-t border-[var(--border-hi)] mt-auto">
-          <div className="flex flex-col md:flex-row items-center gap-6 text-[10px] font-mono uppercase tracking-[0.2em] opacity-40">
+        <div className="mt-auto flex flex-col gap-8 border-t border-[var(--border-hi)] pt-12 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col items-start gap-4 text-[10px] font-mono uppercase tracking-[0.2em] opacity-40 md:flex-row md:items-center md:gap-6">
              <span>&copy; 2026 Sahil Sharma</span>
              <div className="hidden md:block w-px h-3 bg-[var(--border-hi)]" />
              <span>Designed & Built with Intent</span>
           </div>
           
-          <div className="flex items-center gap-6 text-[10px] font-mono uppercase tracking-[0.2em] opacity-40">
+          <div className="flex flex-col items-start gap-4 text-[10px] font-mono uppercase tracking-[0.2em] opacity-40 md:flex-row md:items-center md:gap-6">
              <span>Digital Archive v4.2</span>
              <div className="hidden md:block w-px h-3 bg-[var(--border-hi)]" />
              <span>Dehradun</span>

@@ -5,6 +5,13 @@ import { useInView } from './useInView';
 export function Contact() {
   const { ref, isInView } = useInView();
 
+  const scrollToFeatured = () => {
+    const element = document.getElementById('featured');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <section
       id="contact"
@@ -16,7 +23,7 @@ export function Contact() {
       {/* High-Impact 'Assembled Hollow' Watermark */}
       <div 
         className="pointer-events-none absolute left-0 top-1/4 w-full flex items-center justify-center select-none"
-        style={{ zIndex: 0, transform: 'rotate(-5deg)' }}
+          style={{ zIndex: 0, transform: 'rotate(-5deg)' }}
       >
         <motion.div 
           initial={{ opacity: 0, scale: 0.8 }}
@@ -25,7 +32,7 @@ export function Contact() {
           className="font-black"
           style={{
             fontFamily: 'var(--ff-constructive)',
-            fontSize: 'clamp(140px, 30vw, 420px)',
+            fontSize: 'clamp(88px, 24vw, 420px)',
             color: 'transparent',
             WebkitTextStroke: '1px var(--border-hi)',
             letterSpacing: '0.08em',
@@ -75,10 +82,10 @@ export function Contact() {
             Expect a response within 24 hours to schedule a technical discovery session.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-6 mb-12">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6 mb-12">
             <a
               href="mailto:worksahilsharma@gmail.com?subject=Project%20Brief"
-              className="btn-cta text-black font-bold px-10 py-4 h-[56px] group flex items-center justify-center shadow-[6px_6px_0_0_rgba(0,0,0,0.2)] hover:shadow-[0_0_20px_var(--accent-dim)]"
+              className="btn-cta text-black font-bold px-6 sm:px-10 py-4 h-[56px] group flex items-center justify-center shadow-[6px_6px_0_0_rgba(0,0,0,0.2)] hover:shadow-[0_0_20px_var(--accent-dim)]"
               style={{ 
                 minWidth: 'min(240px, 100%)',
                 background: 'var(--accent)',
@@ -91,20 +98,29 @@ export function Contact() {
               </span>
             </a>
 
-            <a
-              href="#featured"
+            <button
+              type="button"
+              onClick={scrollToFeatured}
               className="eyebrow hover:text-[var(--text)] border-b border-[var(--border-hi)] hover:border-[var(--text)] transition-colors pb-1"
               style={{
                 color: 'var(--muted2)',
                 fontSize: '11px',
                 textDecoration: 'none',
+                background: 'transparent',
+                textAlign: 'left',
+                borderTop: 'none',
+                borderLeft: 'none',
+                borderRight: 'none',
+                paddingLeft: 0,
+                paddingRight: 0,
+                cursor: 'pointer',
               }}
             >
               Review case studies first
-            </a>
+            </button>
           </div>
 
-          <div className="flex gap-4 border-t border-[var(--border)] pt-8">
+          <div className="flex flex-wrap gap-4 border-t border-[var(--border)] pt-8">
             {[
               { id: 'github', href: 'https://github.com/phnxsahil', icon: (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
