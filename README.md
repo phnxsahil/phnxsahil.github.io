@@ -1,11 +1,16 @@
+# phnxsahil.github.io
 
-  # Create Sahil Portfolio Tokens
+Portfolio site built with React + Vite and deployed to GitHub Pages via GitHub Actions.
 
-  This is a code bundle for Create Sahil Portfolio Tokens. The original project is available at https://www.figma.com/design/mIk4mFjIFIqdFrroGjip2F/Create-Sahil-Portfolio-Tokens.
+## Local development
 
-  ## Running the code
+```bash
+npm install
+npm run dev
+```
 
-  Run `npm i` to install the dependencies.
+## Production build
 
-  Run `npm run dev` to start the development server.
-  
+```bash
+npm run build
+```
