@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SS.portfolio — Sahil Sharma</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,700;0,900;1,900&family=Barlow:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --acid: #CBFF3C;
+  --teal: #00E5CC;
+  --red: #FF3B3B;
+  --purple: #A855F7;
+  --orange: #FF6B2B;
+  --bg: #0A0A0A;
+  --s1: #111;
+  --s2: #161616;
+  --s3: #1C1C1C;
+  --text: #F0EDE6;
+  --muted: #5A5A5A;
+  --muted2: #333;
+  --fd: 'Barlow Condensed', sans-serif;
+  --fb: 'Barlow', sans-serif;
+  --fm: 'Space Mono', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:16px;line-height:1.6;overflow-x:hidden;cursor:none}
+ 
+/* CURSOR */
+#cur{position:fixed;width:8px;height:8px;background:var(--acid);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;transition:transform .15s}
+#cur-r{position:fixed;width:32px;height:32px;border:1px solid rgba(203,255,60,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .08s,top .08s}
+body:has(a:hover) #cur,body:has(button:hover) #cur{transform:translate(-50%,-50%) scale(2.5)}
+ 
+/* NOISE */
+body::before{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+ 
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;padding:18px 48px;z-index:100;display:flex;align-items:center;justify-content:space-between;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(10,10,10,.92);border-color:rgba(255,255,255,.06);backdrop-filter:blur(16px)}
+.nav-logo{font-family:var(--fm);font-size:13px;color:var(--text);text-decoration:none;letter-spacing:-.02em}
+.nav-logo span{color:var(--acid)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--acid)}
+.avail-dot{width:8px;height:8px;border-radius:50%;background:var(--acid);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(203,255,60,.5)}50%{box-shadow:0 0 0 7px rgba(203,255,60,0)}}
+ 
+/* SECTIONS */
+section{position:relative;z-index:2}
+ 
+/* ── HERO ── */
+#hero{min-height:100vh;padding:0 48px;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.h-eye{display:flex;align-items:center;gap:10px;font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--acid);margin-bottom:20px;animation:fadeUp .8s ease .2s both}
+.h-eye::before{content:'';width:28px;height:1px;background:var(--acid)}
+.h-name{font-family:var(--fd);font-weight:900;font-size:clamp(88px,14vw,210px);line-height:.86;letter-spacing:-.03em;text-transform:uppercase}
+.h-name .solid{display:block;color:var(--text);animation:fadeUp .9s ease .35s both;cursor:none}
+.h-name .ghost{display:block;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.18);animation:fadeUp .9s ease .5s both}
+/* Name scramble */
+.h-name .solid .letter{display:inline-block;transition:transform .1s,color .1s}
+.h-name .solid:hover .letter{animation:letterDrop .4s ease forwards}
+.h-name .solid .letter:nth-child(1){animation-delay:.00s}
+.h-name .solid .letter:nth-child(2){animation-delay:.04s}
+.h-name .solid .letter:nth-child(3){animation-delay:.08s}
+.h-name .solid .letter:nth-child(4){animation-delay:.12s}
+.h-name .solid .letter:nth-child(5){animation-delay:.16s}
+@keyframes letterDrop{0%{transform:translateY(0) scaleY(1);color:var(--text)}30%{transform:translateY(-12px) scaleY(1.2);color:var(--acid)}60%{transform:translateY(4px) scaleY(.9);color:var(--acid)}100%{transform:translateY(0) scaleY(1);color:var(--acid)}}
+/* Glitch on ghost */
+.h-name .ghost{position:relative}
+.h-name:hover .ghost{animation:glitch .5s ease .25s both}
+@keyframes glitch{0%{-webkit-text-stroke:1.5px rgba(255,255,255,.18)}20%{-webkit-text-stroke:1.5px rgba(203,255,60,.6);transform:translateX(3px)}40%{-webkit-text-stroke:1.5px rgba(255,59,59,.5);transform:translateX(-3px)}60%{-webkit-text-stroke:1.5px rgba(0,229,204,.5);transform:translateX(2px)}80%{-webkit-text-stroke:1.5px rgba(203,255,60,.4);transform:translateX(-1px)}100%{-webkit-text-stroke:1.5px rgba(203,255,60,.35);transform:translateX(0)}}
+.h-sub{font-size:17px;font-weight:300;color:var(--muted);margin-top:28px;max-width:440px;line-height:1.75;animation:fadeUp .8s ease .6s both}
+.h-sub strong{color:var(--text);font-weight:500}
+.h-ctas{display:flex;gap:14px;margin-top:40px;align-items:center;animation:fadeUp .8s ease .75s both}
+.btn-p{background:var(--acid);color:#000;font-family:var(--fm);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:13px 26px;border:none;cursor:none;text-decoration:none;display:inline-flex;align-items:center;gap:8px;font-weight:700;transition:background .15s,transform .15s;border:2px solid var(--acid)}
+.btn-p:hover{background:#deff00;transform:translate(-2px,-2px);box-shadow:4px 4px 0 #fff}
+.btn-s{border:2px solid rgba(255,255,255,.15);color:var(--muted);font-family:var(--fm);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:13px 26px;cursor:none;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:border-color .2s,color .2s,box-shadow .2s,transform .2s}
+.btn-s:hover{border-color:var(--acid);color:var(--acid);transform:translate(-2px,-2px);box-shadow:4px 4px 0 rgba(203,255,60,.3)}
+.h-social{position:absolute;right:48px;bottom:72px;display:flex;flex-direction:column;gap:10px;align-items:center}
+.h-social a{width:34px;height:34px;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:var(--muted);text-decoration:none;transition:all .2s;font-size:13px}
+.h-social a:hover{border-color:var(--acid);color:var(--acid)}
+.h-social-sep{width:1px;height:50px;background:rgba(255,255,255,.08);margin-top:6px}
+.h-avail{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl;transform:rotate(180deg)}
+.h-scroll{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px}
+.h-scroll span{font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.scroll-line{width:1px;height:52px;background:linear-gradient(to bottom,var(--muted),transparent);animation:scrl 1.8s ease-in-out infinite}
+@keyframes scrl{0%,100%{transform:scaleY(1);transform-origin:top}50%{transform:scaleY(.4)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+ 
+/* MARQUEE */
+.marquee-wrap{border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);padding:16px 0;overflow:hidden;background:var(--s1);position:relative;z-index:2}
+.marquee-track{display:flex;white-space:nowrap;width:max-content;animation:mq 24s linear infinite}
+.mq-item{font-family:var(--fd);font-weight:700;font-size:12px;letter-spacing:.18em;text-transform:uppercase;padding:0 28px;color:var(--muted)}
+.mq-item.a{color:var(--acid)}
+@keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+ 
+/* ── ABOUT ── */
+#about{padding:120px 48px;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start}
+.sec-label{font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--acid);display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.sec-label::before{content:'';width:20px;height:1px;background:var(--acid);display:block}
+.about-h{font-family:var(--fd);font-weight:900;font-size:clamp(52px,6vw,84px);line-height:.9;letter-spacing:-.02em;text-transform:uppercase}
+.about-h .g{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.2)}
+.about-body{font-size:16px;font-weight:300;color:var(--muted);line-height:1.85;margin-top:28px}
+.about-body strong{color:var(--text);font-weight:500}
+.about-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:28px}
+.tag{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:5px 13px;border:1px solid rgba(255,255,255,.1);color:var(--muted);transition:all .2s}
+.tag:hover{border-color:var(--acid);color:var(--acid)}
+ 
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.stat{background:var(--s1);padding:32px 24px;position:relative;overflow:hidden;transition:background .2s}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--acid);transform:scaleX(0);transform-origin:left;transition:transform .35s}
+.stat:hover::before{transform:scaleX(1)}
+.stat:hover{background:var(--s2)}
+.stat-n{font-family:var(--fd);font-weight:900;font-size:52px;line-height:1;color:var(--acid);letter-spacing:-.03em}
+.stat-l{font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.about-quote{grid-column:1/-1;border-left:3px solid var(--acid);padding:20px 28px;background:var(--s1);margin-top:8px}
+.about-quote blockquote{font-size:17px;font-weight:300;color:var(--muted);line-height:1.75;font-style:italic}
+.about-quote cite{font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--acid);margin-top:10px;display:block;font-style:normal}
+ 
+/* ── FEATURED ── */
+#featured{padding:0 48px 4px}
+.feat-label{font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--acid);display:flex;align-items:center;gap:10px;margin-bottom:32px}
+.feat-label::before{content:'';width:20px;height:1px;background:var(--acid)}
+ 
+/* Featured card — neo brutalist */
+.feat-card{display:grid;grid-template-columns:1fr 1fr;border:2px solid rgba(255,255,255,.14);background:var(--s1);position:relative;transition:transform .2s;min-height:560px}
+.feat-card:hover{transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--acid)}
+.feat-stamp{position:absolute;top:28px;right:-18px;background:var(--acid);color:#000;font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:6px 14px;font-weight:700;transform:rotate(2deg);z-index:10;box-shadow:3px 3px 0 rgba(0,0,0,.5)}
+.feat-visual{background:#050510;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.feat-info{padding:52px 44px;display:flex;flex-direction:column;justify-content:space-between;border-left:2px solid rgba(255,255,255,.08)}
+.feat-idx{font-family:var(--fm);font-size:10px;color:var(--muted);letter-spacing:.12em;margin-bottom:16px}
+.feat-title{font-family:var(--fd);font-weight:900;font-size:72px;line-height:.88;letter-spacing:-.03em;text-transform:uppercase;color:var(--text)}
+.feat-status{display:inline-flex;align-items:center;gap:6px;background:rgba(203,255,60,.1);border:1px solid rgba(203,255,60,.25);padding:4px 12px;font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--acid);margin-top:16px;width:fit-content}
+.feat-status::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--acid);animation:pulse 1.5s ease-in-out infinite}
+.feat-desc{font-size:15px;font-weight:300;color:var(--muted);line-height:1.8;margin-top:24px;flex:1}
+.feat-stack{display:flex;flex-wrap:wrap;gap:6px;margin-top:28px}
+.stk{font-family:var(--fm);font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border:1px solid rgba(255,255,255,.1);color:var(--muted2)}
+.feat-link{margin-top:32px;display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--acid);text-decoration:none;transition:gap .2s}
+.feat-link:hover{gap:14px}
+ 
+/* Second featured (Fltrd) — full-width horizontal */
+.feat2-card{border:2px solid rgba(255,255,255,.14);background:var(--s1);position:relative;display:grid;grid-template-columns:2fr 3fr;margin-top:2px;min-height:340px;transition:transform .2s}
+.feat2-card:hover{transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--purple)}
+.feat2-info{padding:44px;display:flex;flex-direction:column;justify-content:space-between;border-right:2px solid rgba(255,255,255,.08)}
+.feat2-visual{background:#080010;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.feat2-title{font-family:var(--fd);font-weight:900;font-size:80px;line-height:.88;letter-spacing:-.03em;text-transform:uppercase;color:var(--text)}
+.feat2-stamp{position:absolute;top:28px;left:-10px;background:var(--purple);color:#fff;font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:6px 14px;font-weight:700;transform:rotate(-2deg);z-index:10;box-shadow:3px 3px 0 rgba(0,0,0,.5)}
+ 
+/* ── PROJECTS GRID ── */
+#work{padding:80px 48px 120px}
+.work-h{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px}
+.work-title{font-family:var(--fd);font-weight:900;font-size:clamp(60px,9vw,110px);line-height:.88;letter-spacing:-.03em;text-transform:uppercase}
+.work-cnt{font-family:var(--fm);font-size:12px;color:var(--muted);letter-spacing:.1em;padding-bottom:10px}
+ 
+/* Neo-brutalist project cards */
+.proj-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:2px}
+.pc{background:var(--s1);border:2px solid rgba(255,255,255,.1);position:relative;overflow:hidden;cursor:none;transition:transform .2s,box-shadow .2s}
+.pc:hover{transform:translate(-4px,-4px)}
+.pc.c1:hover{box-shadow:6px 6px 0 var(--teal)}
+.pc.c2:hover{box-shadow:6px 6px 0 #1DB954}
+.pc.c3:hover{box-shadow:6px 6px 0 var(--orange)}
+.pc.span7{grid-column:span 7}
+.pc.span5{grid-column:span 5}
+.pc.span12{grid-column:span 12}
+ 
+.pv{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.pc.span7 .pv{height:280px}
+.pc.span5 .pv{height:280px}
+.pc.span12 .pv{height:200px}
+ 
+.pi{padding:28px 32px 32px}
+.pidx{font-family:var(--fm);font-size:10px;color:var(--muted);letter-spacing:.12em;margin-bottom:8px}
+.ptitle{font-family:var(--fd);font-weight:900;font-size:40px;letter-spacing:-.02em;text-transform:uppercase;line-height:1;margin-bottom:10px;color:var(--text)}
+.pdesc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.75;max-width:380px;margin-bottom:16px}
+.pstack{display:flex;flex-wrap:wrap;gap:5px}
+.pstk{font-family:var(--fm);font-size:9px;letter-spacing:.07em;text-transform:uppercase;padding:3px 9px;border:1px solid rgba(255,255,255,.1);color:var(--muted2)}
+.plnk{position:absolute;top:20px;right:20px;width:36px;height:36px;border:2px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:var(--muted);text-decoration:none;font-size:14px;transition:all .2s;z-index:5}
+.plnk:hover{border-color:var(--acid);color:var(--acid)}
+/* corner number */
+.pcnum{position:absolute;bottom:0;right:0;font-family:var(--fd);font-weight:900;font-size:96px;line-height:1;color:rgba(255,255,255,.03);pointer-events:none;letter-spacing:-.05em;line-height:.85}
+ 
+/* horizontal row for span12 */
+.pc.span12 .pi{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:24px;align-items:start}
+ 
+/* ── STACK ── */
+#stack{padding:120px 48px;background:var(--s1)}
+.stack-h{margin-bottom:56px}
+.stack-title{font-family:var(--fd);font-weight:900;font-size:clamp(56px,8vw,100px);line-height:.88;letter-spacing:-.03em;text-transform:uppercase}
+.skills-layout{display:grid;grid-template-columns:1fr 1fr;gap:72px}
+.col-label{font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:28px;display:flex;align-items:center;gap:10px}
+.col-label::before{content:'';width:16px;height:1px;display:block}
+.dl{color:var(--red)}.dl::before{background:var(--red)}
+.bl{color:var(--teal)}.bl::before{background:var(--teal)}
+.ski{padding:18px 0;border-bottom:1px solid rgba(255,255,255,.06);transition:border-color .2s}
+.ski:first-of-type{border-top:1px solid rgba(255,255,255,.06)}
+.ski:hover{border-color:rgba(255,255,255,.12)}
+.ski-top{display:flex;align-items:center;justify-content:space-between}
+.ski-name{font-size:16px;font-weight:400;color:var(--text)}
+.bar-track{width:112px;height:2px;background:rgba(255,255,255,.07);position:relative}
+.bar-fill{height:100%;position:absolute;left:0;top:0;transition:width 1.1s cubic-bezier(.4,0,.2,1)}
+.df{background:var(--red)}.bf{background:var(--teal)}
+.ski-depth{margin-top:5px;font-family:var(--fm);font-size:9px;letter-spacing:.07em;color:var(--muted);text-transform:uppercase;max-width:280px;line-height:1.6}
+ 
+/* ── CONTACT ── */
+#contact{padding:140px 48px 80px}
+.con-eye{font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--acid);display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.con-eye::before{content:'';width:20px;height:1px;background:var(--acid);display:block}
+.con-h{font-family:var(--fd);font-weight:900;font-size:clamp(56px,9vw,120px);line-height:.88;letter-spacing:-.03em;text-transform:uppercase;margin-bottom:44px}
+.con-h span{color:var(--acid)}
+.con-email{font-family:var(--fm);font-size:16px;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:14px;margin-bottom:56px;transition:color .2s;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:20px;width:100%}
+.con-email:hover{color:var(--acid)}
+ 
+/* FOOTER */
+footer{border-top:1px solid rgba(255,255,255,.06);padding:22px 48px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2}
+.fc{font-family:var(--fm);font-size:10px;letter-spacing:.08em;color:var(--muted)}
+.floc{font-family:var(--fm);font-size:10px;letter-spacing:.08em;color:var(--muted);display:flex;align-items:center;gap:7px}
+.fdot{width:5px;height:5px;border-radius:50%;background:var(--acid);animation:pulse 2s ease-in-out infinite}
+ 
+/* REVEAL */
+.rv{opacity:0;transform:translateY(36px);transition:opacity .7s ease,transform .7s ease}
+.rv.vis{opacity:1;transform:translateY(0)}
+.rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.2s}.rv.d3{transition-delay:.3s}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div id="cur-r"></div>
+ 
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">SS<span>.</span>portfolio</a>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#featured">Work</a>
+    <a href="#stack">Stack</a>
+    <a href="#contact">Contact</a>
+    <div class="avail-dot" title="Available"></div>
+  </div>
+</nav>
+ 
+<!-- HERO -->
+<section id="hero">
+  <div class="h-eye">Early Thinker &nbsp;·&nbsp; Designer &nbsp;·&nbsp; Engineer &nbsp;·&nbsp; Founder</div>
+  <h1 class="h-name">
+    <span class="solid"><span class="letter">S</span><span class="letter">A</span><span class="letter">H</span><span class="letter">I</span><span class="letter">L</span></span>
+    <span class="ghost">SHARMA</span>
+  </h1>
+  <p class="h-sub">I think in <strong>systems</strong>, build with <strong>taste</strong>, and ship products that live at the edge of <strong>design and engineering.</strong></p>
+  <div class="h-ctas">
+    <a href="#featured" class="btn-p">View Work →</a>
+    <a href="#contact" class="btn-s">Let's Talk</a>
+  </div>
+ 
+  <div class="h-social">
+    <a href="https://github.com/phnxsahil" target="_blank" title="GitHub">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+    </a>
+    <a href="https://x.com/theonlysahil1" target="_blank" title="Twitter / X">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.254 5.622 5.91-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/sahil-sharma-5a3715270/" target="_blank" title="LinkedIn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    </a>
+    <div class="h-social-sep"></div>
+    <span class="h-avail">Available · Delhi, India</span>
+  </div>
+ 
+  <div class="h-scroll"><span>Scroll</span><div class="scroll-line"></div></div>
+</section>
+ 
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="mq-item">Miryn AI</span><span class="mq-item a">✦</span>
+    <span class="mq-item">Stash</span><span class="mq-item a">✦</span>
+    <span class="mq-item">Fltrd</span><span class="mq-item a">✦</span>
+    <span class="mq-item">ChaiPaani</span><span class="mq-item a">✦</span>
+    <span class="mq-item">Bookie</span><span class="mq-item a">✦</span>
+    <span class="mq-item">React / Next.js</span><span class="mq-item a">✦</span>
+    <span class="mq-item">FastAPI · Python</span><span class="mq-item a">✦</span>
+    <span class="mq-item">Supabase</span><span class="mq-item a">✦</span>
+    <span class="mq-item">Figma</span><span class="mq-item a">✦</span>
+    <span class="mq-item">AI Integration</span><span class="mq-item a">✦</span>
+    <span class="mq-item">Startup Founder</span><span class="mq-item a">✦</span>
+    <!-- repeat -->
+    <span class="mq-item">Miryn AI</span><span class="mq-item a">✦</span>
+    <span class="mq-item">Stash</span><span class="mq-item a">✦</span>
+    <span class="mq-item">Fltrd</span><span class="mq-item a">✦</span>
+    <span class="mq-item">ChaiPaani</span><span class="mq-item a">✦</span>
+    <span class="mq-item">Bookie</span><span class="mq-item a">✦</span>
+    <span class="mq-item">React / Next.js</span><span class="mq-item a">✦</span>
+    <span class="mq-item">FastAPI · Python</span><span class="mq-item a">✦</span>
+    <span class="mq-item">Supabase</span><span class="mq-item a">✦</span>
+    <span class="mq-item">Figma</span><span class="mq-item a">✦</span>
+    <span class="mq-item">AI Integration</span><span class="mq-item a">✦</span>
+    <span class="mq-item">Startup Founder</span><span class="mq-item a">✦</span>
+  </div>
+</div>
+ 
+<!-- ABOUT -->
+<section id="about">
+  <div>
+    <div class="sec-label rv">About</div>
+    <h2 class="about-h rv d1">I BUILD <span class="g">THINGS</span> THAT MATTER.</h2>
+    <p class="about-body rv d2">Based in <strong>Delhi, India</strong> — I'm a <strong>designer-engineer hybrid</strong> who founds startups. I think like a product designer, build like an engineer, and ship like a founder. My work lives at the intersection of <strong>visual craft</strong> and <strong>technical execution</strong> — from AI companions with persistent memory to music discovery tools that Shazam social reels in real time.</p>
+    <div class="about-tags rv d3">
+      <span class="tag">Product Design</span><span class="tag">React / Next.js</span>
+      <span class="tag">FastAPI</span><span class="tag">Framer Motion</span>
+      <span class="tag">Supabase</span><span class="tag">Figma</span>
+      <span class="tag">AI Integration</span><span class="tag">Startup Building</span>
+    </div>
+  </div>
+  <div>
+    <div class="stats-grid rv">
+      <div class="stat"><div class="stat-n">5+</div><div class="stat-l">Products Shipped</div></div>
+      <div class="stat"><div class="stat-n">2</div><div class="stat-l">In Production</div></div>
+      <div class="stat"><div class="stat-n">0→1</div><div class="stat-l">Founder Mindset</div></div>
+      <div class="stat"><div class="stat-n">∞</div><div class="stat-l">Ideas Building</div></div>
+    </div>
+  </div>
+  <div class="about-quote rv">
+    <blockquote>"Design isn't decoration. Engineering isn't just code. The best products are built by people who can't tell where one ends and the other begins."</blockquote>
+    <cite>— Sahil Sharma, on building products</cite>
+  </div>
+</section>
+ 
+<!-- ══ FEATURED PROJECTS ══ -->
+<section id="featured" style="padding:0 48px 2px">
+  <div class="feat-label rv">Featured Work</div>
+ 
+  <!-- MIRYN AI — primary featured -->
+  <div class="feat-card rv">
+    <div class="feat-stamp">★ FEATURED · IN PRODUCTION</div>
+ 
+    <!-- Visual -->
+    <div class="feat-visual">
+      <svg width="100%" height="100%" viewBox="0 0 500 560" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0">
+        <!-- Memory constellation -->
+        <defs>
+          <radialGradient id="glow1" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#CBFF3C" stop-opacity=".12"/>
+            <stop offset="100%" stop-color="#CBFF3C" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="glow2" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#00E5CC" stop-opacity=".1"/>
+            <stop offset="100%" stop-color="#00E5CC" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <!-- Background glow -->
+        <circle cx="250" cy="280" r="200" fill="url(#glow1)"/>
+        <!-- Memory nodes — constellation layout -->
+        <!-- Center: identity core -->
+        <circle cx="250" cy="280" r="28" fill="rgba(203,255,60,.12)" stroke="rgba(203,255,60,.5)" stroke-width="1.5"/>
+        <circle cx="250" cy="280" r="14" fill="rgba(203,255,60,.2)"/>
+        <text x="250" y="284" font-size="8" fill="rgba(203,255,60,.9)" font-family="monospace" text-anchor="middle">IDENTITY</text>
+        <!-- Memory cluster nodes -->
+        <circle cx="148" cy="180" r="16" fill="rgba(0,229,204,.1)" stroke="rgba(0,229,204,.4)" stroke-width="1"/>
+        <text x="148" y="184" font-size="7" fill="rgba(0,229,204,.8)" font-family="monospace" text-anchor="middle">MEMORY</text>
+        <circle cx="362" cy="160" r="14" fill="rgba(0,229,204,.08)" stroke="rgba(0,229,204,.35)" stroke-width="1"/>
+        <text x="362" y="164" font-size="7" fill="rgba(0,229,204,.7)" font-family="monospace" text-anchor="middle">REFLECT</text>
+        <circle cx="100" cy="320" r="12" fill="rgba(203,255,60,.08)" stroke="rgba(203,255,60,.3)" stroke-width="1"/>
+        <text x="100" y="324" font-size="6" fill="rgba(203,255,60,.7)" font-family="monospace" text-anchor="middle">VALUES</text>
+        <circle cx="400" cy="300" r="12" fill="rgba(203,255,60,.08)" stroke="rgba(203,255,60,.3)" stroke-width="1"/>
+        <text x="400" y="304" font-size="6" fill="rgba(203,255,60,.7)" font-family="monospace" text-anchor="middle">BELIEFS</text>
+        <circle cx="180" cy="400" r="10" fill="rgba(0,229,204,.06)" stroke="rgba(0,229,204,.25)" stroke-width="1"/>
+        <text x="180" y="404" font-size="6" fill="rgba(0,229,204,.6)" font-family="monospace" text-anchor="middle">LOOPS</text>
+        <circle cx="320" cy="420" r="10" fill="rgba(203,255,60,.06)" stroke="rgba(203,255,60,.25)" stroke-width="1"/>
+        <text x="320" y="424" font-size="6" fill="rgba(203,255,60,.6)" font-family="monospace" text-anchor="middle">TRAITS</text>
+        <circle cx="130" cy="450" r="8" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+        <circle cx="390" cy="440" r="8" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+        <!-- Connecting lines -->
+        <line x1="250" y1="252" x2="156" y2="196" stroke="rgba(0,229,204,.2)" stroke-width=".8"/>
+        <line x1="250" y1="252" x2="356" y2="172" stroke="rgba(0,229,204,.2)" stroke-width=".8"/>
+        <line x1="222" y1="280" x2="112" y2="318" stroke="rgba(203,255,60,.15)" stroke-width=".8"/>
+        <line x1="278" y1="280" x2="388" y2="302" stroke="rgba(203,255,60,.15)" stroke-width=".8"/>
+        <line x1="240" y1="308" x2="188" y2="394" stroke="rgba(0,229,204,.12)" stroke-width=".8"/>
+        <line x1="260" y1="308" x2="314" y2="412" stroke="rgba(203,255,60,.12)" stroke-width=".8"/>
+        <line x1="144" y1="192" x2="112" y2="308" stroke="rgba(0,229,204,.1)" stroke-width=".5"/>
+        <line x1="176" y1="400" x2="138" y2="442" stroke="rgba(0,229,204,.1)" stroke-width=".5"/>
+        <line x1="316" y1="420" x2="382" y2="434" stroke="rgba(203,255,60,.1)" stroke-width=".5"/>
+        <!-- Animated pulse rings -->
+        <circle cx="250" cy="280" r="44" fill="none" stroke="rgba(203,255,60,.15)" stroke-width=".8">
+          <animate attributeName="r" values="44;62;44" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values=".15;0;.15" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="148" cy="180" r="24" fill="none" stroke="rgba(0,229,204,.12)" stroke-width=".5">
+          <animate attributeName="r" values="24;36;24" dur="4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values=".12;0;.12" dur="4s" repeatCount="indefinite"/>
+        </circle>
+        <!-- Chat bubble at top -->
+        <rect x="60" y="44" width="200" height="60" rx="6" fill="rgba(203,255,60,.06)" stroke="rgba(203,255,60,.2)" stroke-width=".8"/>
+        <text x="76" y="70" font-size="8.5" fill="rgba(255,255,255,.6)" font-family="monospace">Who am I becoming?</text>
+        <text x="76" y="86" font-size="7.5" fill="rgba(203,255,60,.5)" font-family="monospace">Miryn is reflecting…</text>
+        <!-- Response bubble -->
+        <rect x="240" y="460" width="220" height="72" rx="6" fill="rgba(0,229,204,.06)" stroke="rgba(0,229,204,.2)" stroke-width=".8"/>
+        <text x="254" y="484" font-size="8" fill="rgba(255,255,255,.55)" font-family="monospace">Based on 47 memories,</text>
+        <text x="254" y="498" font-size="8" fill="rgba(255,255,255,.55)" font-family="monospace">your core value is</text>
+        <text x="254" y="514" font-size="8" fill="rgba(0,229,204,.8)" font-family="monospace">→ relentless curiosity</text>
+      </svg>
+    </div>
+ 
+    <!-- Info -->
+    <div class="feat-info">
+      <div>
+        <div class="feat-idx">01 / 05 · AI · Full-Stack</div>
+        <div class="feat-title">MIRYN AI</div>
+        <div class="feat-status">Live Waitlist</div>
+        <p class="feat-desc">A context-aware AI companion that builds a persistent identity system around you — tracking your values, beliefs, open loops, and reflections over time. Not just a chatbot. An AI that actually <em>knows</em> you. Built with a hybrid memory layer, semantic recall, and a reflection pipeline that evolves with every conversation.</p>
+      </div>
+      <div>
+        <div class="feat-stack">
+          <span class="stk">Next.js</span><span class="stk">FastAPI</span><span class="stk">Python</span>
+          <span class="stk">PostgreSQL</span><span class="stk">pgvector</span><span class="stk">Docker</span>
+        </div>
+        <a href="https://miryn-ai.vercel.app" target="_blank" class="feat-link">Visit Waitlist →</a>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- FLTRD — second featured -->
+  <div class="feat2-card rv" style="margin-top:2px">
+    <div class="feat2-stamp">★ FEATURED · IN PRODUCTION</div>
+    <div class="feat2-info">
+      <div>
+        <div class="feat-idx">02 / 05 · Social · Discovery</div>
+        <div class="feat2-title">FLTRD</div>
+        <div class="feat-status">Live Waitlist</div>
+      </div>
+      <div>
+        <p class="feat-desc" style="margin-top:20px">A curated discovery platform — filter the noise, surface what actually matters. Built for people who are tired of algorithmic feeds that serve engagement over insight. Fltrd gives you signal, not scroll.</p>
+        <div class="feat-stack" style="margin-top:20px">
+          <span class="stk">Next.js</span><span class="stk">TypeScript</span><span class="stk">Supabase</span><span class="stk">Framer Motion</span>
+        </div>
+        <a href="#" target="_blank" class="feat-link" style="color:var(--purple)">Visit Waitlist →</a>
+      </div>
+    </div>
+ 
+    <!-- Fltrd visual -->
+    <div class="feat2-visual">
+      <svg width="100%" height="100%" viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0">
+        <defs>
+          <radialGradient id="pg" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="#A855F7" stop-opacity=".15"/>
+            <stop offset="100%" stop-color="#A855F7" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="300" cy="170" r="200" fill="url(#pg)"/>
+        <!-- Filter funnel metaphor -->
+        <!-- Noisy inputs at top -->
+        <rect x="40" y="32" width="100" height="22" rx="3" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.1)" stroke-width=".5"/>
+        <text x="50" y="47" font-size="8" fill="rgba(255,255,255,.3)" font-family="monospace">algorithmic feed</text>
+        <rect x="160" y="22" width="80" height="22" rx="3" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.08)" stroke-width=".5"/>
+        <text x="170" y="37" font-size="8" fill="rgba(255,255,255,.2)" font-family="monospace">noise + ads</text>
+        <rect x="260" y="32" width="90" height="22" rx="3" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.08)" stroke-width=".5"/>
+        <text x="270" y="47" font-size="8" fill="rgba(255,255,255,.2)" font-family="monospace">engagement bait</text>
+        <rect x="370" y="24" width="80" height="22" rx="3" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.07)" stroke-width=".5"/>
+        <text x="378" y="39" font-size="8" fill="rgba(255,255,255,.18)" font-family="monospace">viral trash</text>
+        <rect x="468" y="34" width="92" height="22" rx="3" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.07)" stroke-width=".5"/>
+        <text x="476" y="49" font-size="8" fill="rgba(255,255,255,.15)" font-family="monospace">scroll infinity</text>
+        <!-- Funnel lines -->
+        <line x1="90" y1="54" x2="210" y2="130" stroke="rgba(168,85,247,.15)" stroke-width=".8"/>
+        <line x1="200" y1="44" x2="230" y2="130" stroke="rgba(168,85,247,.12)" stroke-width=".8"/>
+        <line x1="305" y1="54" x2="270" y2="130" stroke="rgba(168,85,247,.12)" stroke-width=".8"/>
+        <line x1="410" y1="46" x2="310" y2="130" stroke="rgba(168,85,247,.1)" stroke-width=".8"/>
+        <line x1="514" y1="56" x2="340" y2="130" stroke="rgba(168,85,247,.1)" stroke-width=".8"/>
+        <!-- FLTRD core -->
+        <rect x="170" y="128" width="260" height="84" rx="6" fill="rgba(168,85,247,.1)" stroke="rgba(168,85,247,.5)" stroke-width="1.5"/>
+        <text x="300" y="162" font-size="20" fill="rgba(168,85,247,.9)" font-family="'Barlow Condensed',sans-serif" font-weight="900" text-anchor="middle" letter-spacing="4">FLTRD</text>
+        <text x="300" y="182" font-size="8" fill="rgba(255,255,255,.4)" font-family="monospace" text-anchor="middle">signal over scroll</text>
+        <text x="300" y="200" font-size="7" fill="rgba(168,85,247,.5)" font-family="monospace" text-anchor="middle">context-aware · curated · calm</text>
+        <!-- Curated output below -->
+        <line x1="230" y1="212" x2="180" y2="268" stroke="rgba(168,85,247,.3)" stroke-width="1"/>
+        <line x1="300" y1="212" x2="300" y2="268" stroke="rgba(168,85,247,.4)" stroke-width="1.5"/>
+        <line x1="370" y1="212" x2="420" y2="268" stroke="rgba(168,85,247,.3)" stroke-width="1"/>
+        <rect x="120" y="268" width="110" height="50" rx="4" fill="rgba(168,85,247,.15)" stroke="rgba(168,85,247,.4)" stroke-width="1"/>
+        <text x="175" y="290" font-size="7.5" fill="rgba(255,255,255,.7)" font-family="monospace" text-anchor="middle">★ relevant</text>
+        <text x="175" y="305" font-size="7" fill="rgba(168,85,247,.6)" font-family="monospace" text-anchor="middle">for you</text>
+        <rect x="245" y="268" width="110" height="50" rx="4" fill="rgba(168,85,247,.18)" stroke="rgba(168,85,247,.5)" stroke-width="1.5"/>
+        <text x="300" y="290" font-size="7.5" fill="rgba(255,255,255,.8)" font-family="monospace" text-anchor="middle">★ insightful</text>
+        <text x="300" y="305" font-size="7" fill="rgba(168,85,247,.7)" font-family="monospace" text-anchor="middle">deep reads</text>
+        <rect x="370" y="268" width="110" height="50" rx="4" fill="rgba(168,85,247,.12)" stroke="rgba(168,85,247,.35)" stroke-width="1"/>
+        <text x="425" y="290" font-size="7.5" fill="rgba(255,255,255,.6)" font-family="monospace" text-anchor="middle">★ signal</text>
+        <text x="425" y="305" font-size="7" fill="rgba(168,85,247,.5)" font-family="monospace" text-anchor="middle">not scroll</text>
+      </svg>
+    </div>
+  </div>
+</section>
+ 
+<!-- ══ ALL PROJECTS ══ -->
+<section id="work">
+  <div class="work-h rv">
+    <div>
+      <div class="sec-label">All Projects</div>
+      <h2 class="work-title">BUILT &amp; SHIPPED</h2>
+    </div>
+    <div class="work-cnt">05 Projects · 2024–2025</div>
+  </div>
+ 
+  <div class="proj-grid">
+ 
+    <!-- STASH — span7 -->
+    <div class="pc span7 c1 rv">
+      <a href="https://stashyourmusic.vercel.app" target="_blank" class="plnk">↗</a>
+      <div class="pv" style="background:#030D08">
+        <svg width="100%" height="100%" viewBox="0 0 420 280" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0">
+          <!-- Stash: reel → music flow -->
+          <!-- Phone frame left -->
+          <rect x="30" y="24" width="110" height="190" rx="10" fill="#0A1810" stroke="rgba(29,185,84,.25)" stroke-width="1"/>
+          <rect x="38" y="36" width="94" height="148" rx="6" fill="#0F2216"/>
+          <!-- Instagram reel mockup -->
+          <rect x="38" y="36" width="94" height="148" rx="6" fill="#0A1812"/>
+          <!-- Video content blocks -->
+          <rect x="44" y="42" width="82" height="96" rx="3" fill="#112018"/>
+          <circle cx="85" cy="90" r="22" fill="rgba(29,185,84,.08)" stroke="rgba(29,185,84,.2)" stroke-width="1"/>
+          <polygon points="80,82 80,98 96,90" fill="rgba(29,185,84,.5)"/>
+          <!-- Reel label -->
+          <text x="58" y="154" font-size="7" fill="rgba(255,255,255,.4)" font-family="monospace">@user · reel</text>
+          <text x="58" y="166" font-size="7" fill="rgba(255,255,255,.25)" font-family="monospace">🎵 vibing to this...</text>
+          <!-- Stash button -->
+          <rect x="44" y="174" width="82" height="22" rx="3" fill="rgba(29,185,84,.3)" stroke="rgba(29,185,84,.5)" stroke-width="1"/>
+          <text x="85" y="188" font-size="8" fill="rgba(29,185,84,1)" font-family="monospace" text-anchor="middle" font-weight="700">STASH ↗</text>
+          <!-- Arrow flow -->
+          <line x1="142" y1="120" x2="182" y2="120" stroke="rgba(29,185,84,.5)" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <polygon points="182,116 192,120 182,124" fill="rgba(29,185,84,.6)"/>
+          <!-- Shazam recognition box -->
+          <rect x="192" y="88" width="110" height="64" rx="4" fill="#0A1810" stroke="rgba(29,185,84,.3)" stroke-width="1"/>
+          <text x="202" y="110" font-size="7.5" fill="rgba(255,255,255,.5)" font-family="monospace">Recognized:</text>
+          <text x="202" y="124" font-size="8" fill="rgba(29,185,84,.9)" font-family="monospace">Blinding Lights</text>
+          <text x="202" y="138" font-size="7" fill="rgba(255,255,255,.3)" font-family="monospace">The Weeknd · 2019</text>
+          <!-- Arrow down -->
+          <line x1="247" y1="153" x2="247" y2="176" stroke="rgba(29,185,84,.4)" stroke-width="1.5" stroke-dasharray="3 3"/>
+          <polygon points="243,176 247,186 251,176" fill="rgba(29,185,84,.5)"/>
+          <!-- Spotify lib -->
+          <rect x="192" y="186" width="110" height="56" rx="4" fill="#0A1810" stroke="rgba(29,185,84,.4)" stroke-width="1.5"/>
+          <circle cx="206" cy="214" r="8" fill="rgba(29,185,84,.8)"/>
+          <text x="220" y="210" font-size="8" fill="rgba(255,255,255,.7)" font-family="monospace">Saved to</text>
+          <text x="220" y="222" font-size="8" fill="rgba(29,185,84,.9)" font-family="monospace">Spotify Library ✓</text>
+          <text x="202" y="236" font-size="7" fill="rgba(255,255,255,.25)" font-family="monospace">Stash: Electronic</text>
+          <!-- Floating labels -->
+          <text x="320" y="60" font-size="8" fill="rgba(29,185,84,.4)" font-family="monospace">Shazamio</text>
+          <text x="320" y="74" font-size="8" fill="rgba(29,185,84,.3)" font-family="monospace">PWA · yt-dlp</text>
+          <text x="320" y="88" font-size="8" fill="rgba(29,185,84,.25)" font-family="monospace">Gemini AI</text>
+          <text x="320" y="254" font-size="9" fill="rgba(29,185,84,.6)" font-family="monospace" font-weight="700">Spotify →</text>
+        </svg>
+        <div class="pcnum">03</div>
+      </div>
+      <div class="pi">
+        <div class="pidx">03 / 05 · Music Tech · Full-Stack</div>
+        <div class="ptitle">STASH</div>
+        <p class="pdesc">The internet's save button for music. Paste an Instagram Reel, TikTok, or YouTube link — Stash Shazams the audio and saves the song directly to your Spotify library. Smart genre-based playlist organization powered by Gemini AI. PWA-ready, ships as a mobile app.</p>
+        <div class="pstack">
+          <span class="pstk">React</span><span class="pstk">TypeScript</span><span class="pstk">FastAPI</span>
+          <span class="pstk">Shazamio</span><span class="pstk">Spotify API</span><span class="pstk">Gemini AI</span>
+          <span class="pstk">Supabase</span><span class="pstk">Railway</span>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- CHAPAANI — span5 -->
+    <div class="pc span5 c3 rv d1">
+      <a href="https://chai-paani.vercel.app" target="_blank" class="plnk">↗</a>
+      <div class="pv" style="background:#0D0600">
+        <svg width="100%" height="100%" viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0">
+          <!-- ChaiPaani: split bill UI -->
+          <rect x="30" y="20" width="240" height="240" rx="8" fill="#120800" stroke="rgba(255,107,43,.15)" stroke-width=".8"/>
+          <!-- Header -->
+          <rect x="30" y="20" width="240" height="36" rx="8" fill="#1A0E00"/>
+          <rect x="30" y="44" width="240" height="12" fill="#1A0E00"/>
+          <text x="150" y="42" font-size="10" fill="rgba(255,107,43,.9)" font-family="monospace" text-anchor="middle" font-weight="700">ChaiPaani</text>
+          <text x="150" y="58" font-size="7.5" fill="rgba(255,255,255,.3)" font-family="monospace" text-anchor="middle">Split the bill, not the fun</text>
+          <!-- Group header -->
+          <text x="44" y="80" font-size="8" fill="rgba(255,107,43,.6)" font-family="monospace">Goa Trip 🏖️ · 4 people</text>
+          <!-- Expense rows -->
+          <rect x="36" y="90" width="228" height="26" rx="3" fill="rgba(255,107,43,.08)"/>
+          <text x="46" y="107" font-size="8" fill="rgba(255,255,255,.65)" font-family="monospace">Dinner at Pousada</text>
+          <text x="234" y="107" font-size="8" fill="rgba(255,107,43,.9)" font-family="monospace" text-anchor="end">₹2,400</text>
+          <rect x="36" y="120" width="228" height="26" rx="3" fill="rgba(255,107,43,.05)"/>
+          <text x="46" y="137" font-size="8" fill="rgba(255,255,255,.5)" font-family="monospace">Taxi to beach</text>
+          <text x="234" y="137" font-size="8" fill="rgba(255,107,43,.7)" font-family="monospace" text-anchor="end">₹640</text>
+          <rect x="36" y="150" width="228" height="26" rx="3" fill="rgba(255,107,43,.04)"/>
+          <text x="46" y="167" font-size="8" fill="rgba(255,255,255,.4)" font-family="monospace">Hotel split</text>
+          <text x="234" y="167" font-size="8" fill="rgba(255,107,43,.6)" font-family="monospace" text-anchor="end">₹8,000</text>
+          <!-- Balance summary -->
+          <rect x="36" y="186" width="228" height="52" rx="4" fill="rgba(255,107,43,.1)" stroke="rgba(255,107,43,.3)" stroke-width="1"/>
+          <text x="46" y="204" font-size="8" fill="rgba(255,107,43,.7)" font-family="monospace">You are owed</text>
+          <text x="46" y="222" font-size="20" fill="rgba(255,107,43,1)" font-family="'Barlow Condensed',sans-serif" font-weight="900">₹ 1,260</text>
+          <text x="224" y="222" font-size="8" fill="rgba(255,255,255,.3)" font-family="monospace" text-anchor="end">settle →</text>
+        </svg>
+        <div class="pcnum">04</div>
+      </div>
+      <div class="pi">
+        <div class="pidx">04 / 05 · FinTech · Full-Stack</div>
+        <div class="ptitle">CHAIP­AANI</div>
+        <p class="pdesc">Split the bill, not the fun. A real-time expense splitting app for friend groups — Splitwise for India. Group management, instant balance calculation, Google OAuth, live updates across tabs.</p>
+        <div class="pstack">
+          <span class="pstk">React</span><span class="pstk">TypeScript</span><span class="pstk">Supabase</span>
+          <span class="pstk">Radix UI</span><span class="pstk">Realtime</span>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- BOOKIE — span12 horizontal -->
+    <div class="pc span12 c2 rv">
+      <a href="https://bookieapp.vercel.app" target="_blank" class="plnk">↗</a>
+      <div class="pv" style="background:#050A08">
+        <svg width="100%" height="100%" viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0">
+          <!-- Bookie: horizontal bookmark UI -->
+          <!-- Sidebar -->
+          <rect x="20" y="16" width="120" height="168" rx="6" fill="#080F0A" stroke="rgba(0,229,204,.12)" stroke-width=".8"/>
+          <text x="35" y="40" font-size="9" fill="rgba(0,229,204,.7)" font-family="monospace" font-weight="700">Bookie</text>
+          <rect x="28" y="52" width="96" height="18" rx="3" fill="rgba(0,229,204,.15)"/>
+          <text x="36" y="64" font-size="7.5" fill="rgba(0,229,204,.8)" font-family="monospace">All Bookmarks</text>
+          <rect x="28" y="74" width="96" height="18" rx="3" fill="rgba(255,255,255,.03)"/>
+          <text x="36" y="86" font-size="7.5" fill="rgba(255,255,255,.3)" font-family="monospace">Design</text>
+          <rect x="28" y="96" width="96" height="18" rx="3" fill="rgba(255,255,255,.03)"/>
+          <text x="36" y="108" font-size="7.5" fill="rgba(255,255,255,.25)" font-family="monospace">Dev Tools</text>
+          <rect x="28" y="118" width="96" height="18" rx="3" fill="rgba(255,255,255,.02)"/>
+          <text x="36" y="130" font-size="7.5" fill="rgba(255,255,255,.2)" font-family="monospace">Startups</text>
+          <!-- Bookmark cards -->
+          <rect x="156" y="16" width="180" height="80" rx="4" fill="#080F0A" stroke="rgba(0,229,204,.15)" stroke-width=".8"/>
+          <rect x="156" y="16" width="180" height="16" rx="4" fill="rgba(0,229,204,.08)"/>
+          <rect x="156" y="32" width="180" height="0" fill="rgba(0,229,204,.08)"/>
+          <text x="166" y="28" font-size="7.5" fill="rgba(0,229,204,.7)" font-family="monospace">linear.app</text>
+          <text x="166" y="50" font-size="8.5" fill="rgba(255,255,255,.7)" font-family="monospace">Linear — Issue</text>
+          <text x="166" y="64" font-size="7" fill="rgba(255,255,255,.3)" font-family="monospace">tracking for modern</text>
+          <text x="166" y="76" font-size="7" fill="rgba(255,255,255,.2)" font-family="monospace">software teams</text>
+          <rect x="156" y="104" width="180" height="80" rx="4" fill="#080F0A" stroke="rgba(0,229,204,.1)" stroke-width=".8"/>
+          <text x="166" y="122" font-size="7.5" fill="rgba(0,229,204,.5)" font-family="monospace">vercel.com/blog</text>
+          <text x="166" y="140" font-size="8.5" fill="rgba(255,255,255,.6)" font-family="monospace">Next.js 15 is here</text>
+          <text x="166" y="154" font-size="7" fill="rgba(255,255,255,.25)" font-family="monospace">Turbopack stable,</text>
+          <text x="166" y="166" font-size="7" fill="rgba(255,255,255,.18)" font-family="monospace">PPR, caching changes</text>
+          <!-- More cards... -->
+          <rect x="348" y="16" width="180" height="80" rx="4" fill="#080F0A" stroke="rgba(0,229,204,.12)" stroke-width=".8"/>
+          <text x="358" y="34" font-size="7.5" fill="rgba(0,229,204,.6)" font-family="monospace">figma.com</text>
+          <text x="358" y="52" font-size="8.5" fill="rgba(255,255,255,.65)" font-family="monospace">Variables &amp; modes</text>
+          <text x="358" y="66" font-size="7" fill="rgba(255,255,255,.28)" font-family="monospace">Design tokens finally</text>
+          <text x="358" y="78" font-size="7" fill="rgba(255,255,255,.18)" font-family="monospace">built into Figma</text>
+          <rect x="348" y="104" width="180" height="80" rx="4" fill="#080F0A" stroke="rgba(0,229,204,.08)" stroke-width=".8"/>
+          <text x="358" y="122" font-size="7.5" fill="rgba(0,229,204,.45)" font-family="monospace">supabase.com/blog</text>
+          <text x="358" y="140" font-size="8.5" fill="rgba(255,255,255,.55)" font-family="monospace">Supabase Realtime</text>
+          <text x="358" y="154" font-size="7" fill="rgba(255,255,255,.22)" font-family="monospace">Broadcast channels</text>
+          <text x="358" y="166" font-size="7" fill="rgba(255,255,255,.14)" font-family="monospace">and presence</text>
+          <!-- Gemini AI enrichment badge -->
+          <rect x="548" y="60" width="160" height="80" rx="6" fill="rgba(0,229,204,.07)" stroke="rgba(0,229,204,.25)" stroke-width="1"/>
+          <text x="558" y="82" font-size="8" fill="rgba(0,229,204,.7)" font-family="monospace">Gemini AI enrichment</text>
+          <text x="558" y="98" font-size="7.5" fill="rgba(255,255,255,.4)" font-family="monospace">Auto-tags · Summaries</text>
+          <text x="558" y="114" font-size="7.5" fill="rgba(255,255,255,.3)" font-family="monospace">Smart categorization</text>
+          <text x="558" y="130" font-size="7.5" fill="rgba(0,229,204,.4)" font-family="monospace">JioBase proxy →</text>
+          <!-- Realtime indicator -->
+          <circle cx="740" cy="100" r="4" fill="rgba(0,229,204,.8)">
+            <animate attributeName="r" values="4;8;4" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values=".8;0;.8" dur="2s" repeatCount="indefinite"/>
+          </circle>
+          <text x="752" y="104" font-size="8" fill="rgba(0,229,204,.5)" font-family="monospace">live sync</text>
+        </svg>
+        <div class="pcnum" style="font-size:120px">05</div>
+      </div>
+      <div class="pi">
+        <div>
+          <div class="pidx">05 / 05 · Productivity</div>
+          <div class="ptitle" style="font-size:34px">BOOKIE</div>
+        </div>
+        <div>
+          <p class="pdesc">Smart bookmarking with Google OAuth, Gemini AI enrichment, and real-time sync across tabs. Bookie auto-tags and summarizes your saved links. Built with a custom Cloudflare Workers proxy to solve Supabase DNS blocks for Indian users.</p>
+        </div>
+        <div>
+          <div class="pstack">
+            <span class="pstk">Next.js</span><span class="pstk">Supabase</span><span class="pstk">Gemini AI</span>
+            <span class="pstk">Google OAuth</span><span class="pstk">JioBase</span>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+  </div>
+</section>
+ 
+<!-- ── STACK ── -->
+<section id="stack">
+  <div class="stack-h rv">
+    <div class="sec-label">Capabilities</div>
+    <h2 class="stack-title">STACK &amp; SKILLS</h2>
+  </div>
+ 
+  <div class="skills-layout">
+    <div class="rv">
+      <div class="col-label dl">I Design</div>
+      <div class="ski"><div class="ski-top"><span class="ski-name">Product Design</span><div class="bar-track"><div class="bar-fill df" style="width:90%"></div></div></div><div class="ski-depth">End-to-end UX — research, flows, wireframes, polished Figma mockups. 5+ products from 0→1.</div></div>
+      <div class="ski"><div class="ski-top"><span class="ski-name">Figma / Prototyping</span><div class="bar-track"><div class="bar-fill df" style="width:87%"></div></div></div><div class="ski-depth">Auto-layout mastery, component libraries, variables, advanced prototyping with conditions.</div></div>
+      <div class="ski"><div class="ski-top"><span class="ski-name">Design Systems</span><div class="bar-track"><div class="bar-fill df" style="width:82%"></div></div></div><div class="ski-depth">Token-based systems, semantic color scales, multi-brand theming, Figma → code handoff.</div></div>
+      <div class="ski"><div class="ski-top"><span class="ski-name">Motion / Animation</span><div class="bar-track"><div class="bar-fill df" style="width:76%"></div></div></div><div class="ski-depth">Framer Motion, Lottie, CSS keyframes. Physics-based springs that feel native.</div></div>
+      <div class="ski"><div class="ski-top"><span class="ski-name">Brand Identity</span><div class="bar-track"><div class="bar-fill df" style="width:70%"></div></div></div><div class="ski-depth">Logo systems, typographic identities — helped 3+ startups punch above their weight.</div></div>
+    </div>
+ 
+    <div class="rv d2">
+      <div class="col-label bl">I Build</div>
+      <div class="ski"><div class="ski-top"><span class="ski-name">React / Next.js</span><div class="bar-track"><div class="bar-fill bf" style="width:92%"></div></div></div><div class="ski-depth">App Router, Server Components, streaming, ISR, edge functions. Used across all 5 products.</div></div>
+      <div class="ski"><div class="ski-top"><span class="ski-name">Python / FastAPI</span><div class="bar-track"><div class="bar-fill bf" style="width:84%"></div></div></div><div class="ski-depth">REST APIs, background jobs, audio processing pipelines (Stash), AI backends (Miryn).</div></div>
+      <div class="ski"><div class="ski-top"><span class="ski-name">TypeScript</span><div class="bar-track"><div class="bar-fill bf" style="width:88%"></div></div></div><div class="ski-depth">Strict mode, Zod validation, discriminated unions — types as documentation.</div></div>
+      <div class="ski"><div class="ski-top"><span class="ski-name">Supabase / Postgres</span><div class="bar-track"><div class="bar-fill bf" style="width:86%"></div></div></div><div class="ski-depth">Auth, Realtime, RLS, pgvector for AI. Shipped across Stash, ChaiPaani, Bookie, Miryn.</div></div>
+      <div class="ski"><div class="ski-top"><span class="ski-name">AI Integration</span><div class="bar-track"><div class="bar-fill bf" style="width:85%"></div></div></div><div class="ski-depth">Persistent memory systems (Miryn), RAG pipelines, Gemini embeddings (Stash genre AI, Bookie).</div></div>
+    </div>
+  </div>
+</section>
+ 
+<!-- CONTACT -->
+<section id="contact">
+  <div class="con-eye rv">Say Hello</div>
+  <h2 class="con-h rv">LET'S BUILD <span>SOMETHING.</span></h2>
+  <a href="mailto:worksahilsharma@gmail.com" class="con-email rv">
+    <span>WORKSAHILSHARMA@GMAIL.COM</span>
+    <span>→</span>
+  </a>
+  <div style="display:flex;gap:12px;flex-wrap:wrap" class="rv">
+    <a href="#" class="btn-p">View Resume ↗</a>
+    <a href="#" class="btn-s">Schedule a Call</a>
+  </div>
+</section>
+ 
+<footer>
+  <div class="fc">© 2025 Sahil Sharma. Designed &amp; built with intent.</div>
+  <div class="floc"><div class="fdot"></div>Delhi, India &nbsp;✦&nbsp; Open to opportunities</div>
+</footer>
+ 
+<script>
+// Cursor
+const cur = document.getElementById('cur');
+const curR = document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(loop)})();
+ 
+// Nav scroll
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
+ 
+// Reveal
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')}),{threshold:.08});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+ 
+// Skill bars animate in
+const bobs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const w=e.target.dataset.w;e.target.style.width='0';setTimeout(()=>e.target.style.width=w,80)}}),{threshold:.5});
+document.querySelectorAll('.bar-fill').forEach(b=>{b.dataset.w=b.style.width;b.style.width='0';bobs.observe(b)});
+ 
+// Card tilt
+document.querySelectorAll('.pc,.feat-card,.feat2-card').forEach(c=>{
+  c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.setProperty('--tx',x);c.style.setProperty('--ty',y)});
+  c.addEventListener('mouseleave',()=>{c.style.transform=''});
+});
+ 
+// Stat tilt
+document.querySelectorAll('.stat').forEach(s=>{
+  s.addEventListener('mousemove',e=>{const r=s.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;s.style.transform=`perspective(500px) rotateX(${-y*8}deg) rotateY(${x*8}deg)`});
+  s.addEventListener('mouseleave',()=>s.style.transform='');
+});
+</script>
+</body>
+</html>
+ 

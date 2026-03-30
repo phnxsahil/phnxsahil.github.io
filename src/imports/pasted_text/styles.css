@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Space Grotesk',sans-serif;background:transparent;color:var(--color-text-primary)}
+.root{padding:12px 0 40px}
+.phase-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.phase-tab{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;padding:7px 14px;border:1px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer;border-radius:6px;transition:all .18s;white-space:nowrap}
+.phase-tab:hover{border-color:var(--color-border-primary);color:var(--color-text-primary)}
+.phase-tab.active{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary)}
+.phase-panel{display:none}
+.phase-panel.active{display:block}
+.phase-header{margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--color-border-tertiary)}
+.phase-num{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;color:var(--color-text-tertiary);margin-bottom:6px;text-transform:uppercase}
+.phase-title{font-size:20px;font-weight:600;margin-bottom:6px}
+.phase-desc{font-size:13px;color:var(--color-text-secondary);line-height:1.6}
+.steps{display:flex;flex-direction:column;gap:12px}
+.step{border:1px solid var(--color-border-tertiary);border-radius:10px;overflow:hidden;transition:border-color .2s}
+.step:hover{border-color:var(--color-border-secondary)}
+.step-header{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;user-select:none}
+.step-index{font-family:'DM Mono',monospace;font-size:11px;color:var(--color-text-tertiary);min-width:28px}
+.step-title{font-size:14px;font-weight:500;flex:1}
+.step-tag{font-family:'DM Mono',monospace;font-size:10px;padding:3px 8px;border-radius:4px;letter-spacing:.05em}
+.tag-figma{background:#1e1e2e;color:#a78bfa}
+.tag-code{background:#0d1117;color:#4ade80}
+.tag-design{background:#1a0a2e;color:#e879f9}
+.tag-type{background:#0a1628;color:#60a5fa}
+.tag-anim{background:#0d1a0d;color:#34d399}
+.tag-system{background:#1c1208;color:#fbbf24}
+.step-arrow{font-size:12px;color:var(--color-text-tertiary);transition:transform .2s}
+.step.open .step-arrow{transform:rotate(90deg)}
+.step-body{display:none;padding:0 16px 16px}
+.step.open .step-body{display:block}
+.prompt-block{background:var(--color-background-secondary);border:1px solid var(--color-border-tertiary);border-left:3px solid #a78bfa;border-radius:0 8px 8px 0;padding:12px 14px;margin-bottom:12px;position:relative}
+.prompt-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;color:#a78bfa;margin-bottom:8px;text-transform:uppercase}
+.prompt-text{font-size:12px;line-height:1.7;color:var(--color-text-primary);white-space:pre-wrap}
+.copy-btn{position:absolute;top:10px;right:10px;font-family:'DM Mono',monospace;font-size:9px;padding:3px 8px;border:1px solid var(--color-border-secondary);border-radius:4px;background:transparent;color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.copy-btn:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
+.copy-btn.copied{color:#4ade80;border-color:#4ade80}
+.note-block{background:var(--color-background-secondary);border-radius:8px;padding:12px 14px;margin-bottom:12px}
+.note-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;color:var(--color-text-tertiary);margin-bottom:6px;text-transform:uppercase}
+.note-text{font-size:12px;line-height:1.65;color:var(--color-text-secondary)}
+.note-text strong{color:var(--color-text-primary);font-weight:500}
+.token-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:8px}
+.token-pill{background:var(--color-background-secondary);border:1px solid var(--color-border-tertiary);border-radius:8px;padding:10px 12px}
+.token-name{font-family:'DM Mono',monospace;font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px}
+.token-val{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.color-swatch{width:20px;height:20px;border-radius:4px;display:inline-block;margin-right:6px;vertical-align:middle}
+.font-pair{display:flex;flex-direction:column;gap:4px;padding:10px 12px;background:var(--color-background-secondary);border-radius:8px;border:1px solid var(--color-border-tertiary)}
+.font-display-sample{font-size:22px;letter-spacing:.02em;line-height:1}
+.font-body-sample{font-size:14px;line-height:1.5;color:var(--color-text-secondary)}
+.font-mono-sample{font-family:'DM Mono',monospace;font-size:11px;color:var(--color-text-tertiary)}
+.checklist{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.check-item{display:flex;align-items:flex-start;gap:10px;font-size:12px;line-height:1.55;color:var(--color-text-secondary)}
+.check-dot{width:16px;height:16px;border-radius:50%;border:1px solid var(--color-border-primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;cursor:pointer;transition:all .2s}
+.check-dot.done{background:var(--color-text-primary);border-color:var(--color-text-primary)}
+.check-dot.done::after{content:'✓';font-size:9px;color:var(--color-background-primary)}
+.progress-bar{height:3px;background:var(--color-border-tertiary);border-radius:2px;margin-bottom:20px;overflow:hidden}
+.progress-fill{height:100%;background:var(--color-text-primary);border-radius:2px;transition:width .4s ease}
+.section-divider{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--color-text-tertiary);text-transform:uppercase;padding:8px 0 6px;border-top:1px solid var(--color-border-tertiary);margin-top:12px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="root">
+
+<div class="phase-nav">
+  <button class="phase-tab active" onclick="switchPhase('p0')">Overview</button>
+  <button class="phase-tab" onclick="switchPhase('p1')">Phase 1 · Setup</button>
+  <button class="phase-tab" onclick="switchPhase('p2')">Phase 2 · Typography</button>
+  <button class="phase-tab" onclick="switchPhase('p3')">Phase 3 · Frames</button>
+  <button class="phase-tab" onclick="switchPhase('p4')">Phase 4 · Motion</button>
+  <button class="phase-tab" onclick="switchPhase('p5')">Phase 5 · Dark/Light</button>
+  <button class="phase-tab" onclick="switchPhase('p6')">Phase 6 · Export</button>
+</div>
+
+<div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+
+<!-- OVERVIEW -->
+<div class="phase-panel active" id="p0">
+  <div class="phase-header">
+    <div class="phase-num">Master Roadmap</div>
+    <div class="phase-title">Sahil Sharma — Portfolio Build Plan</div>
+    <div class="phase-desc">A 6-phase Figma-first design system approach. Every section includes exact copy-paste prompts for Figma AI, font specs, token values, and animation notes. Build sequentially — each phase gates the next.</div>
+  </div>
+
+  <div class="steps">
+    <div class="step open">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">00</span>
+        <span class="step-title">What you're building</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="note-block">
+          <div class="note-label">Portfolio Architecture</div>
+          <div class="note-text">
+            <strong>8 Sections:</strong> Nav · Hero · Ticker · About · Projects (5 cards) · Skills · Contact · Footer<br><br>
+            <strong>2 Themes:</strong> Dark Cinematic (default) + Light Editorial (toggle)<br><br>
+            <strong>Motion Language:</strong> Framer-style — staggered reveals, cursor parallax, scroll-triggered animations, hover depth lifts, entrance choreography<br><br>
+            <strong>Typography Stack:</strong> Bebas Neue (display) + Space Grotesk (body) + DM Mono (labels/code)<br><br>
+            <strong>Color Identity:</strong> Acid yellow #E8FF47 accent · #080808 dark bg · #F5F2EC light bg · Neo-brutalist sharp edges + cinematic depth
+          </div>
+        </div>
+        <div class="token-grid">
+          <div class="token-pill"><div class="token-name">Dark BG</div><div class="token-val"><span class="color-swatch" style="background:#080808;border:1px solid #333"></span>#080808</div></div>
+          <div class="token-pill"><div class="token-name">Light BG</div><div class="token-val"><span class="color-swatch" style="background:#F5F2EC;border:1px solid #ddd"></span>#F5F2EC</div></div>
+          <div class="token-pill"><div class="token-name">Accent</div><div class="token-val"><span class="color-swatch" style="background:#E8FF47"></span>#E8FF47</div></div>
+          <div class="token-pill"><div class="token-name">Accent 2</div><div class="token-val"><span class="color-swatch" style="background:#FF4D4D"></span>#FF4D4D</div></div>
+          <div class="token-pill"><div class="token-name">Accent 3</div><div class="token-val"><span class="color-swatch" style="background:#4DFFB4"></span>#4DFFB4</div></div>
+          <div class="token-pill"><div class="token-name">Border</div><div class="token-val">rgba(255,255,255,0.07)</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">01</span>
+        <span class="step-title">Figma file structure to create</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="note-block">
+          <div class="note-label">Figma Pages to create</div>
+          <div class="note-text">
+            <strong>Page 1:</strong> 🎨 Design System (colors, type, spacing, components)<br>
+            <strong>Page 2:</strong> 🌑 Dark Mode — Full Layout<br>
+            <strong>Page 3:</strong> ☀️ Light Mode — Full Layout<br>
+            <strong>Page 4:</strong> 📱 Mobile Responsive<br>
+            <strong>Page 5:</strong> 🎬 Motion Spec (annotated with timing values)<br>
+            <strong>Page 6:</strong> 🧩 Component Library (cards, nav, buttons, chips)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 1: SETUP -->
+<div class="phase-panel" id="p1">
+  <div class="phase-header">
+    <div class="phase-num">Phase 1</div>
+    <div class="phase-title">File Setup & Design Tokens</div>
+    <div class="phase-desc">Build your design system foundation first. Every subsequent frame references these tokens. Do not skip this phase.</div>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">1.1</span>
+        <span class="step-title">Create Figma Variables (tokens)</span>
+        <span class="step-tag tag-figma">Figma</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="prompt-block">
+          <div class="prompt-label">Figma AI Prompt</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Create a variable collection called "Sahil Portfolio Tokens" with two modes: Dark and Light.
+
+COLOR variables:
+bg-primary: Dark=#080808 / Light=#F5F2EC
+bg-secondary: Dark=#0F0F0F / Light=#EFEFEA
+bg-surface: Dark=#1A1A1A / Light=#E8E5DC
+border-default: Dark=rgba(255,255,255,0.07) / Light=rgba(0,0,0,0.08)
+border-bright: Dark=rgba(255,255,255,0.15) / Light=rgba(0,0,0,0.18)
+text-primary: Dark=#F2F0EB / Light=#0A0A0A
+text-secondary: Dark=#9A9A9A / Light=#5A5A5A
+text-muted: Dark=#6B6B6B / Light=#888888
+accent: Dark=#E8FF47 / Light=#C8E000
+accent-on: Dark=#000000 / Light=#000000
+
+SPACING variables (number):
+spacing-xs=8 / sm=16 / md=24 / lg=48 / xl=80 / xxl=140
+
+RADIUS variables (number):
+radius-sm=2 / radius-md=8 / radius-lg=0 (neo-brutalist flat on project cards)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">1.2</span>
+        <span class="step-title">Install fonts in Figma</span>
+        <span class="step-tag tag-type">Typography</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="note-block">
+          <div class="note-label">Fonts needed — install via Figma Font Manager</div>
+          <div class="note-text">
+            <strong>Bebas Neue</strong> — Google Fonts (free) · Used for: Hero name, section headings, contact CTA<br>
+            <strong>Space Grotesk</strong> — Google Fonts (free) · Used for: All body text, project descriptions, nav links<br>
+            <strong>DM Mono</strong> — Google Fonts (free) · Used for: Labels, stack chips, monospace accents, nav logo<br><br>
+            Install Figma desktop app → Resources panel → search each font → "Get font"
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">1.3</span>
+        <span class="step-title">Create Text Styles</span>
+        <span class="step-tag tag-figma">Figma</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="prompt-block">
+          <div class="prompt-label">Figma AI Prompt — Typography Scale</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Create text styles for a portfolio called "Sahil Portfolio Typography":
+
+DISPLAY styles (Bebas Neue):
+- Display/Hero: 160px, weight 400, line-height 0.88, letter-spacing -1%
+- Display/Section: 80px, weight 400, line-height 0.95, letter-spacing 2%
+- Display/Card: 36px, weight 400, line-height 1, letter-spacing 2%
+- Display/Contact: 120px, weight 400, line-height 0.9, letter-spacing 2%
+
+BODY styles (Space Grotesk):
+- Body/Large: 18px, weight 400, line-height 1.7
+- Body/Base: 16px, weight 400, line-height 1.7
+- Body/Small: 14px, weight 400, line-height 1.6
+- Body/Strong: 16px, weight 500, line-height 1.7
+
+MONO styles (DM Mono):
+- Mono/Label: 11px, weight 400, letter-spacing 15%, uppercase
+- Mono/Nav: 12px, weight 400, letter-spacing 12%, uppercase
+- Mono/Eyebrow: 11px, weight 500, letter-spacing 20%, uppercase
+- Mono/Stack: 10px, weight 400, letter-spacing 10%, uppercase
+- Mono/Logo: 13px, weight 400, letter-spacing 10%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">1.4</span>
+        <span class="step-title">Frame setup — artboard sizes</span>
+        <span class="step-tag tag-figma">Figma</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="note-block">
+          <div class="note-label">Artboard Specs</div>
+          <div class="note-text">
+            <strong>Desktop:</strong> 1440 × auto (set to hug contents vertically)<br>
+            <strong>Tablet:</strong> 768 × auto<br>
+            <strong>Mobile:</strong> 390 × auto (iPhone 14 Pro)<br><br>
+            In the dark mode page: fill bg-primary Dark token on all frames.<br>
+            In the light mode page: fill bg-primary Light token on all frames.<br>
+            Use <strong>Auto Layout</strong> on every section frame — direction: vertical, padding: 140px top/bottom, 48px left/right.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 2: TYPOGRAPHY -->
+<div class="phase-panel" id="p2">
+  <div class="phase-header">
+    <div class="phase-num">Phase 2</div>
+    <div class="phase-title">Typography System Deep Dive</div>
+    <div class="phase-desc">Typography is 70% of this portfolio's identity. Bebas Neue is the cinematic muscle. Space Grotesk is the precision body. DM Mono is the technical soul. Here's exactly how to use each.</div>
+  </div>
+  <div class="steps">
+    <div class="step open">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">2.1</span>
+        <span class="step-title">Hero name — Bebas Neue treatment</span>
+        <span class="step-tag tag-type">Typography</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="prompt-block">
+          <div class="prompt-label">Figma AI Prompt</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Design the hero name treatment for "SAHIL SHARMA":
+
+Line 1: "SAHIL" — Bebas Neue, 160px, color: text-primary token, fill solid
+Line 2: "SHARMA" — Bebas Neue, 160px, color: TRANSPARENT fill, stroke: rgba(255,255,255,0.2), stroke width: 1px. This is the outline/ghost effect.
+
+Stack both lines with -8px gap (overlapping slightly). 
+Line-height: 0.88 on both.
+Each line in its own text frame inside an Auto Layout frame (direction: vertical, gap: -8px).
+
+Add a thin horizontal rule (1px, border-default color token, full width) directly below "SHARMA" at 24px gap.
+
+This creates the neo-brutalist mixed solid/outline name treatment used in high-end portfolios.</div>
+        </div>
+        <div class="note-block">
+          <div class="note-label">Typography Rule</div>
+          <div class="note-text">The <strong>outline ghost text</strong> on line 2 is a signature move. It creates depth without using shadows or gradients — pure neo-brutalist visual identity. The solid/ghost contrast makes the name feel layered and cinematic.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">2.2</span>
+        <span class="step-title">Eyebrow label system (DM Mono)</span>
+        <span class="step-tag tag-type">Typography</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="prompt-block">
+          <div class="prompt-label">Figma AI Prompt</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Create a reusable "Eyebrow Label" component in Figma:
+
+Layout: Auto Layout, horizontal, gap 12px, align center.
+Contents:
+1. A horizontal line: 32px wide, 1px tall, fill: accent color token (#E8FF47 in dark)
+2. Text: DM Mono, 11px, weight 400, letter-spacing 20%, ALL CAPS, color: accent token
+
+Example text: "SELECTED WORK"
+
+This component gets used before every section heading as a section identifier. It signals "what follows is intentional" — micro-label as visual grammar.
+
+Variants needed:
+- Default: with leading line
+- Numbered: replace line with "01 —" format (same mono font)
+- Minimal: text only, no line</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">2.3</span>
+        <span class="step-title">Body text hierarchy rules</span>
+        <span class="step-tag tag-type">Typography</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="note-block">
+          <div class="note-label">Dark Mode — Body Text Rules</div>
+          <div class="note-text">
+            <strong>Primary text</strong> (#F2F0EB) — Names, headings, key statements. NOT pure white. Slightly warm so it feels cinematic, not clinical.<br><br>
+            <strong>Secondary text</strong> (#9A9A9A) — Body copy, descriptions. Low contrast = depth. Forces the eye toward primary elements.<br><br>
+            <strong>Accent-highlighted text</strong> — Use Space Grotesk 500 weight + text-primary color for <strong>one or two key phrases</strong> inside a paragraph. Never more.<br><br>
+            <strong>Muted labels</strong> (#6B6B6B) — Date stamps, project numbers, stack chips.<br><br>
+            Rule: Never use pure #FFFFFF in the portfolio. Always #F2F0EB max. The 8% warmth reads as intentional design, not default white.
+          </div>
+        </div>
+        <div class="note-block">
+          <div class="note-label">Light Mode — Body Text Rules</div>
+          <div class="note-text">
+            <strong>Primary text</strong> (#0A0A0A) — Same warmth principle, near-black not pure black.<br><br>
+            <strong>Secondary text</strong> (#5A5A5A) — Same hierarchy, inverted.<br><br>
+            <strong>Accent color changes</strong> — In light mode, #E8FF47 is TOO bright for text. Use #C8E000 (slightly deeper) for accent labels. For the eyebrow line, use a 2px black rule instead.<br><br>
+            Light mode accent on buttons: black bg + white text (inverted from dark mode's yellow).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">2.4</span>
+        <span class="step-title">Ticker / marquee text</span>
+        <span class="step-tag tag-type">Typography</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="prompt-block">
+          <div class="prompt-label">Figma AI Prompt</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Design a horizontal ticker strip for the portfolio:
+
+Container: Full width, 56px tall, bg-secondary color token, 1px border top and bottom using border-default token.
+
+Ticker content (repeated twice for seamless loop in code):
+"Startup Founder ✦ Product Design ✦ Full-Stack Engineering ✦ Early-Stage Builder ✦ Design Systems ✦ Motion & Interaction ✦ Zero → One ✦"
+
+Typography: DM Mono, 11px, letter-spacing 15%, uppercase, color: text-muted token.
+The ✦ separators: accent color, 8px font-size.
+
+Space each item with 48px padding on left and right.
+In Figma, use a long horizontal frame with clip content ON. The animation (infinite left scroll) will be coded separately.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 3: FRAMES -->
+<div class="phase-panel" id="p3">
+  <div class="phase-header">
+    <div class="phase-num">Phase 3</div>
+    <div class="phase-title">All 8 Section Frames — Prompts</div>
+    <div class="phase-desc">Build each section as a separate Figma frame, then stack them vertically in the main layout. Each prompt is self-contained — you can build in any order.</div>
+  </div>
+  <div class="steps">
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">F1</span>
+        <span class="step-title">Navigation Bar</span>
+        <span class="step-tag tag-figma">Figma</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="prompt-block">
+          <div class="prompt-label">Figma AI Prompt</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Design a fixed navigation bar for "Sahil Sharma" portfolio:
+
+Frame: 1440px wide, 72px tall, Auto Layout horizontal, justify-content: space-between, align-items: center, padding: 0 48px.
+Background: transparent (it overlays the hero).
+
+LEFT: Logo text "SS.portfolio" — DM Mono 13px, letter-spacing 10%. "SS" in text-primary, ".portfolio" in accent color (#E8FF47 dark / #C8E000 light).
+
+RIGHT: Navigation links in Auto Layout horizontal, gap 32px.
+Links: About · Work · Stack · Contact
+Style: DM Mono 12px, letter-spacing 12%, uppercase, text-muted color.
+Hover state: Create a variant with text in accent color.
+
+Add a subtle frosted-glass variant for when the user scrolls (background: rgba(8,8,8,0.95), backdrop-filter: blur(12px)). This is the "scrolled" state — create as a second component variant.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">F2</span>
+        <span class="step-title">Hero Section</span>
+        <span class="step-tag tag-figma">Figma</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="prompt-block">
+          <div class="prompt-label">Figma AI Prompt</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Design a full-viewport hero section (1440 × 900px) for Sahil Sharma's portfolio:
+
+BACKGROUND: Fill bg-primary token. Add a subtle dot grid pattern: use a 2×2px rectangle filled rgba(255,255,255,0.06), then use Figma's repeat grid with 80px spacing both axes. Apply a radial gradient mask (white center → transparent edges) to the grid layer so it fades out at the corners. 
+
+LAYOUT: Auto Layout vertical, justify content at bottom, padding 80px all sides. This pushes all content to the bottom-left.
+
+CONTENT (bottom-aligned):
+1. Eyebrow label component: "EARLY THINKER · DESIGNER · ENGINEER · FOUNDER"
+   Gap below: 24px
+
+2. Hero name block (from Phase 2 — the solid/ghost treatment):
+   "SAHIL" solid + "SHARMA" outlined
+   Gap below: 40px
+
+3. Bottom row — Auto Layout horizontal, space-between:
+   LEFT: Description text (Space Grotesk 16px, text-secondary, max-width 380px):
+   "I think in systems, build with taste, and ship products that live at the edge of design and engineering."
+   Bold "systems", "taste", "design and engineering" with text-primary + weight 500.
+   
+   RIGHT: Button group — Auto Layout horizontal gap 16px:
+   Button 1 (Primary): "View Work →" — bg: accent, text: black, DM Mono 12px uppercase, padding 14px 28px, NO border radius (neo-brutalist flat). Hover state: translate(-2px,-2px) + 4px box shadow in accent-2 red.
+   Button 2 (Ghost): "Let's Talk" — transparent bg, 1px border-bright, text-muted, same font. Hover: border becomes accent.
+
+4. Scroll hint (center bottom): vertical line 40px + "SCROLL" label in DM Mono 10px.
+
+Add a soft vignette overlay at the bottom 200px of the hero (gradient from transparent to bg-primary) to create depth transition into the next section.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">F3</span>
+        <span class="step-title">About Section</span>
+        <span class="step-tag tag-figma">Figma</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="prompt-block">
+          <div class="prompt-label">Figma AI Prompt</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Design the About section for Sahil Sharma's portfolio (1440px wide, auto height):
+
+Layout: Two-column grid (1fr 1fr), 80px gap, 140px vertical padding, 48px horizontal padding.
+
+LEFT COLUMN — top to bottom:
+1. Eyebrow label: "ABOUT"
+2. Heading (Bebas Neue 80px): "I build / things / that matter." — "things" in italic outline style (transparent fill, stroke rgba(255,255,255,0.2), 1px)
+3. Body text (Space Grotesk 16px, line-height 1.8, text-secondary): "Based in Jaipur, India — I'm a designer-engineer hybrid who founds startups. I think like a product designer, build like an engineer, and ship like a founder. My work lives at the intersection of visual craft and technical execution."
+4. Tag cloud — 8 pills in a flex-wrap layout: "Product Design" "React / Next.js" "Framer Motion" "Node.js" "Figma" "Design Systems" "AI Integration" "Startup Building" — each pill: 1px border-bright, DM Mono 11px uppercase, padding 8px 16px, text-muted, NO border radius.
+
+RIGHT COLUMN — top offset 80px from column start:
+1. 2×2 stat grid (gap: 2px between cells):
+   Each cell: bg-surface, 1px border-default, padding 32px 28px
+   "3+" / Startups Founded | "∞" / Ideas Shipped | "2x" / Faster Builder | "01" / Zero to One
+   Numbers: Bebas Neue 56px, accent color. Labels: DM Mono 11px uppercase, text-muted.
+   
+2. Quote block (24px gap below grid):
+   1px border-default, 3px left border in accent, padding 32px 28px, bg-secondary.
+   Italic quote text (Space Grotesk 15px, text-secondary): "Design isn't decoration. Engineering isn't just code. The best products are built by people who can't tell where one ends and the other begins."
+   Attribution: DM Mono 11px, accent color — "— Sahil Sharma, on building products"</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">F4</span>
+        <span class="step-title">Projects Section (5 cards)</span>
+        <span class="step-tag tag-figma">Figma</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="prompt-block">
+          <div class="prompt-label">Figma AI Prompt — Project Card Component</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Design a "Project Card" component for Sahil Sharma's portfolio:
+
+Card size: 420px wide, auto height.
+Border: 1px border-default. NO border radius (neo-brutalist flat). bg-surface.
+
+SECTION 1 — Screenshot area (420 × 260px):
+- A placeholder frame filled bg-secondary with a 40px dot-grid pattern.
+- Centered: a small icon placeholder (48px square, 1px border-bright, centered symbol) + "ADD SCREENSHOT" label in DM Mono 10px text-muted below it.
+- On hover state: show an overlay gradient (bg-primary 90% → transparent, bottom-up) with a "View Live →" link in accent color, DM Mono 10px uppercase, bottom-left.
+- The screenshot image (when added) should have object-fit: cover and a subtle scale(1.04) on the card's hover state.
+
+SECTION 2 — Card body (padding 28px):
+Row 1: Project number — DM Mono 10px, text-muted. E.g. "01 / 05"
+Row 2: Project name — Bebas Neue 36px, text-primary
+Row 3: Description — Space Grotesk 14px, text-secondary, line-height 1.6, max 2 lines
+Row 4: Stack chips — flex-wrap, gap 8px. Each chip: bg rgba(255,255,255,0.04), 1px border-default, DM Mono 10px uppercase, text-muted, padding 4px 10px, NO radius.
+Divider: 1px border-default, full width, margin 20px 0
+Row 5 (links row): Auto Layout horizontal, gap 12px, align center.
+  - GitHub link: GitHub SVG icon (16px) + "GitHub" label, DM Mono 10px, text-muted. Hover: accent.
+  - Live link: "↗ Live" — DM Mono 10px, color accent-3 (#4DFFB4 dark).
+
+Create 5 instances of this card on the canvas with different placeholder numbers (01–05).</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-label">Figma AI Prompt — Projects Section Layout</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Design the Projects section layout (1440px wide):
+
+Section header (padding 0 48px, margin-bottom 80px):
+Left: Eyebrow "SELECTED WORK" + Bebas Neue 80px "Projects"
+Right: "05 Projects" in DM Mono 13px text-muted
+
+Below header: A horizontal scroll container (full width, overflow-x scroll, padding 0 48px, padding-bottom 40px).
+Place the 5 project cards side by side with 24px gap between them.
+
+IMPORTANT: The cards should bleed slightly past the right edge of the viewport to hint at horizontal scroll. Add a right-fade gradient overlay (width 120px, bg-primary → transparent, right-aligned, pointer-events none) to signal scrollability.
+
+Custom scrollbar: height 2px, track transparent, thumb border-bright.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">F5</span>
+        <span class="step-title">Skills / Stack Section</span>
+        <span class="step-tag tag-figma">Figma</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="prompt-block">
+          <div class="prompt-label">Figma AI Prompt</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Design the Skills section for Sahil Sharma's portfolio (1440px, auto height, 140px vertical padding, 48px horizontal padding):
+
+Top: Eyebrow label "CAPABILITIES" + Bebas Neue 80px heading "Stack & Skills"
+
+Below (40px gap): Two-column grid, 80px gap.
+
+LEFT COLUMN — "I Design":
+Header: "I DESIGN" — DM Mono 11px, letter-spacing 15%, color: #FF4D4D (accent-2)
+Leading line (20px wide, 1px, same red) before the text.
+
+5 skill rows, each row:
+- Full width, 1px bottom border-default, padding 16px 0
+- Hover state: padding-left becomes 12px (subtle indent = motion cue in Figma)
+- Left: skill name (Space Grotesk 15px, weight 500, text-primary)
+- Right: progress bar track (120px wide, 2px tall, border-bright)
+  with filled bar on top (accent yellow, transforms from 0% width on scroll)
+Skills: Product Design 92% · Figma/Prototyping 90% · Design Systems 85% · Motion/Animation 80% · Brand Identity 75%
+
+RIGHT COLUMN — "I Build":
+Header: "I BUILD" — DM Mono 11px, color: #4DFFB4 (accent-3), same leading line treatment.
+
+5 skill rows (same structure, filled bar in accent-3 green):
+React/Next.js 93% · TypeScript 88% · Node/APIs 85% · Databases 78% · AI Integration 82%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">F6</span>
+        <span class="step-title">Contact + Footer</span>
+        <span class="step-tag tag-figma">Figma</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="prompt-block">
+          <div class="prompt-label">Figma AI Prompt</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Design the Contact section and Footer for Sahil Sharma's portfolio (1440px wide):
+
+CONTACT SECTION (bg-secondary, 140px vertical padding, 48px horizontal):
+Background decoration: Behind all content, add "CONNECT" in Bebas Neue 200px, color: rgba(255,255,255,0.02), bottom-right aligned, overflow hidden. This creates depth without visual noise.
+
+Content stack:
+1. Eyebrow: "SAY HELLO"
+2. Heading: "Let's build / something." — Bebas Neue clamp(60px–120px). "something." in accent color.
+3. Bottom row — space-between:
+   LEFT: Email link "sahil@example.com →" — Bebas Neue 40px, text-muted, hover: accent color.
+   RIGHT: Social icon grid (horizontal, gap 16px):
+   Each social button: 48px × 48px square, 1px border-bright, icon centered (16px svg), text-muted.
+   Include: GitHub · Twitter/X · LinkedIn · Instagram · Dribbble
+   Hover state: border-color accent, text accent, bg rgba(accent,0.05), translate Y -4px.
+
+FOOTER (bg-primary, 1px top border-default, padding 32px 48px):
+Auto Layout horizontal, space-between:
+LEFT: "© 2025 Sahil Sharma. Designed & built with intent." — DM Mono 11px, text-muted
+RIGHT: "Jaipur, India ✦ Open to opportunities" — DM Mono 11px, text-muted, ✦ in accent.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PHASE 4: MOTION -->
+<div class="phase-panel" id="p4">
+  <div class="phase-header">
+    <div class="phase-num">Phase 4</div>
+    <div class="phase-title">Motion & Animation Spec</div>
+    <div class="phase-desc">Every animation value is defined here. In Figma, use Smart Animate for prototyping. In code, map these directly to CSS transitions or Framer Motion props.</div>
+  </div>
+  <div class="steps">
+    <div class="step open">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">4.1</span>
+        <span class="step-title">Core easing tokens</span>
+        <span class="step-tag tag-anim">Motion</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="token-grid">
+          <div class="token-pill"><div class="token-name">ease-enter</div><div class="token-val" style="font-family:'DM Mono',monospace;font-size:11px">cubic-bezier(0.16,1,0.3,1)</div></div>
+          <div class="token-pill"><div class="token-name">ease-smooth</div><div class="token-val" style="font-family:'DM Mono',monospace;font-size:11px">cubic-bezier(0.4,0,0.2,1)</div></div>
+          <div class="token-pill"><div class="token-name">ease-bounce</div><div class="token-val" style="font-family:'DM Mono',monospace;font-size:11px">cubic-bezier(0.34,1.56,0.64,1)</div></div>
+          <div class="token-pill"><div class="token-name">dur-fast</div><div class="token-val">0.2s</div></div>
+          <div class="token-pill"><div class="token-name">dur-base</div><div class="token-val">0.4s</div></div>
+          <div class="token-pill"><div class="token-name">dur-slow</div><div class="token-val">0.8s</div></div>
+          <div class="token-pill"><div class="token-name">dur-enter</div><div class="token-val">0.9s</div></div>
+          <div class="token-pill"><div class="token-name">stagger</div><div class="token-val">0.1s per child</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">4.2</span>
+        <span class="step-title">Hero entrance choreography</span>
+        <span class="step-tag tag-anim">Motion</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="note-block">
+          <div class="note-label">Sequence — all triggered on page load</div>
+          <div class="note-text">
+            <strong>0.0s:</strong> Page loads, all hero content is invisible<br>
+            <strong>0.2s:</strong> Eyebrow label fades up (opacity 0→1, y: 20→0, dur: 0.8s, ease-smooth)<br>
+            <strong>0.3s:</strong> "SAHIL" slides up from clip (y: 100%→0, dur: 0.9s, ease-enter) — use overflow:hidden clip<br>
+            <strong>0.5s:</strong> "SHARMA" slides up from clip (same values, 0.2s delay after SAHIL)<br>
+            <strong>1.0s:</strong> Description + CTA buttons fade up together (opacity 0→1, y: 20→0, dur: 0.8s)<br>
+            <strong>1.4s:</strong> Scroll hint fades in (opacity 0→0.5, y: 10→0, dur: 0.8s)<br><br>
+            <strong>Figma Prototype tip:</strong> Use "After delay" triggers. Set each element's initial state in Figma using component variants (State: Hidden / Visible). Apply Smart Animate between states.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">4.3</span>
+        <span class="step-title">Scroll reveal — all sections</span>
+        <span class="step-tag tag-anim">Motion</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="note-block">
+          <div class="note-label">Scroll Reveal Pattern (apply to every section)</div>
+          <div class="note-text">
+            <strong>Base transform:</strong> opacity: 0, translateY: 40px<br>
+            <strong>Triggered state:</strong> opacity: 1, translateY: 0<br>
+            <strong>Duration:</strong> 0.8s<br>
+            <strong>Easing:</strong> ease-enter (0.16, 1, 0.3, 1)<br>
+            <strong>Threshold:</strong> when 10% of element is in viewport<br><br>
+            <strong>Stagger delays for child elements:</strong><br>
+            Child 1: delay 0s<br>
+            Child 2: delay 0.1s<br>
+            Child 3: delay 0.2s<br>
+            Child 4: delay 0.3s<br><br>
+            In Figma prototype: Use "While Scrolling" interaction → Smart Animate.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">4.4</span>
+        <span class="step-title">Hover interactions — project cards</span>
+        <span class="step-tag tag-anim">Motion</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="note-block">
+          <div class="note-label">Card Hover State Spec</div>
+          <div class="note-text">
+            <strong>Card translate:</strong> Y: 0 → -8px, dur: 0.4s, ease-enter<br>
+            <strong>Border:</strong> border-default → border-bright, dur: 0.3s<br>
+            <strong>Screenshot image:</strong> scale(1) → scale(1.04), dur: 0.6s, ease-enter<br>
+            <strong>Overlay:</strong> opacity 0 → 1, dur: 0.3s<br>
+            <strong>Cursor:</strong> switches to custom dot cursor (coded separately)<br><br>
+            <strong>In Figma:</strong> Create "Hover" component variant. Link via prototype "On Hover" → "Smart Animate" → "Hover" state.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">4.5</span>
+        <span class="step-title">Custom cursor spec</span>
+        <span class="step-tag tag-anim">Motion</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="note-block">
+          <div class="note-label">Cursor Design (code implementation)</div>
+          <div class="note-text">
+            <strong>Dot cursor:</strong> 12px circle, fill: #E8FF47, mix-blend-mode: difference — this inverts colors under it<br>
+            <strong>Ring cursor:</strong> 36px circle, 1px border rgba(232,255,71,0.4), no fill, lags behind dot by ~0.12s (lerp factor 0.12)<br>
+            <strong>On link hover:</strong> dot scales to 24px (0.2s transition)<br>
+            <strong>On project card:</strong> ring scales to 60px, shows "VIEW" text inside (optional)<br><br>
+            In Figma: cursor:none on body. Draw the cursor component at actual size in the design system page for reference.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 5: DARK/LIGHT -->
+<div class="phase-panel" id="p5">
+  <div class="phase-header">
+    <div class="phase-num">Phase 5</div>
+    <div class="phase-title">Dark / Light Mode System</div>
+    <div class="phase-desc">Both modes share the same layout and component library. The only things that change are the token values. This is why Phase 1 variables are critical — swap mode = swap tokens.</div>
+  </div>
+  <div class="steps">
+    <div class="step open">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">5.1</span>
+        <span class="step-title">What changes between modes</span>
+        <span class="step-tag tag-system">System</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="note-block">
+          <div class="note-label">Dark → Light: What switches</div>
+          <div class="note-text">
+            <strong>Backgrounds:</strong> #080808 → #F5F2EC · #0F0F0F → #EFEFEA · #1A1A1A → #E8E5DC<br>
+            <strong>Text:</strong> #F2F0EB → #0A0A0A · #9A9A9A → #5A5A5A · #6B6B6B → #888888<br>
+            <strong>Borders:</strong> rgba(255,255,255,0.07) → rgba(0,0,0,0.08)<br>
+            <strong>Accent on text:</strong> #E8FF47 → #C8E000 (darker for readability on light bg)<br>
+            <strong>Accent buttons:</strong> Yellow bg / black text in BOTH modes (same)<br>
+            <strong>Hero ghost text:</strong> rgba(255,255,255,0.2) stroke → rgba(0,0,0,0.12) stroke<br>
+            <strong>Dot grid:</strong> rgba(255,255,255,0.06) → rgba(0,0,0,0.05)<br>
+            <strong>Ticker background:</strong> bg-secondary (auto)<br>
+            <strong>Noise overlay:</strong> Stays but at 40% opacity in light mode vs 60% in dark
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">5.2</span>
+        <span class="step-title">Mode toggle component</span>
+        <span class="step-tag tag-figma">Figma</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="prompt-block">
+          <div class="prompt-label">Figma AI Prompt</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Design a theme toggle button for the portfolio navigation:
+
+Size: 40px × 22px toggle track.
+States: Dark Mode (default) and Light Mode.
+
+Dark state: Track bg rgba(255,255,255,0.1), knob 18px circle bg accent yellow (#E8FF47), knob position: right side.
+Light state: Track bg rgba(0,0,0,0.12), knob bg #0A0A0A, knob position: left side.
+
+Place this toggle at the far right of the navigation, after the last nav link.
+Add a 1px border-bright around the track.
+
+In Figma prototype: "On Click" → "Change To" → opposite state, Smart Animate, 0.3s ease.
+
+In code: clicking toggles a 'light-mode' class on the HTML element, which swaps all CSS custom properties to light values. The portfolio uses prefers-color-scheme on first load, then remembers user preference in localStorage.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">5.3</span>
+        <span class="step-title">Light mode — what to redesign</span>
+        <span class="step-tag tag-design">Design</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="note-block">
+          <div class="note-label">Light Mode Special Treatments</div>
+          <div class="note-text">
+            <strong>Hero eyebrow line:</strong> Change from yellow to a 2px black/ink rule<br>
+            <strong>Ticker separators:</strong> ✦ in #C8E000 still works — slightly muted on light bg<br>
+            <strong>Stat cards:</strong> bg-surface is now #E8E5DC — add a very subtle bottom shadow (0 2px 0 rgba(0,0,0,0.06)) for elevation feel<br>
+            <strong>Quote block left border:</strong> 3px solid #C8E000 — good on light<br>
+            <strong>Project cards border:</strong> rgba(0,0,0,0.10) — 1px — more visible than dark mode<br>
+            <strong>Contact section BG watermark:</strong> "CONNECT" in rgba(0,0,0,0.03) — adjust opacity<br>
+            <strong>Skills progress bars:</strong> track changes to rgba(0,0,0,0.10), filled bar stays accent<br>
+            <strong>Buttons — ghost:</strong> border rgba(0,0,0,0.2), text #5A5A5A
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">5.4</span>
+        <span class="step-title">Socials — all platforms</span>
+        <span class="step-tag tag-figma">Figma</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="prompt-block">
+          <div class="prompt-label">Figma AI Prompt — Social Links Component</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Design a social links row component for the portfolio contact section:
+
+Container: Auto Layout horizontal, gap 12px.
+
+Create 5 social icon buttons. Each button:
+- 48×48px square frame
+- 1px border border-bright
+- NO border radius (neo-brutalist flat)
+- bg: transparent
+- Icon: 16px SVG, centered, text-muted color
+
+Platforms and icons to include:
+1. GitHub — Octocat SVG icon
+2. Twitter/X — X logo SVG  
+3. LinkedIn — LinkedIn square SVG
+4. Instagram — Instagram camera outline SVG
+5. Dribbble — Dribbble ball SVG
+
+Hover variant for each button:
+- border-color: accent (#E8FF47 dark / #C8E000 light)
+- icon color: accent
+- bg: rgba(accent, 0.05)
+- translateY: -4px (Smart Animate this in prototype)
+
+Place social row at bottom-right of the contact section.
+Also add a small text below the social row: "Available for freelance & full-time" in DM Mono 10px, text-muted, centered.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 6: EXPORT -->
+<div class="phase-panel" id="p6">
+  <div class="phase-header">
+    <div class="phase-num">Phase 6</div>
+    <div class="phase-title">Export, Deploy & Maintain</div>
+    <div class="phase-desc">Your Figma file is the single source of truth. Export flows, update content, and deploy. Here's the exact pipeline.</div>
+  </div>
+  <div class="steps">
+    <div class="step open">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">6.1</span>
+        <span class="step-title">Project screenshot workflow</span>
+        <span class="step-tag tag-figma">Figma</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="note-block">
+          <div class="note-label">Screenshot → Card Pipeline</div>
+          <div class="note-text">
+            <strong>Step 1:</strong> Take a full-page screenshot at 1440px width (use GoFullPage Chrome extension or Cleanshot X)<br>
+            <strong>Step 2:</strong> Crop to 840×520px (2x the card size for retina clarity)<br>
+            <strong>Step 3:</strong> Export as .webp for performance<br>
+            <strong>Step 4:</strong> In Figma — select the placeholder frame → drag image in → set Fill: Fit crop → adjust focal point to most interesting part of the screenshot<br>
+            <strong>Step 5:</strong> In code — replace the placeholder div with: &lt;img src="./project-name.webp" alt="Project Name" loading="lazy"&gt;<br><br>
+            <strong>Pro tip:</strong> Use a browser mockup frame in Figma (browser chrome + shadow) around screenshots for extra polish. The URL bar showing your live domain adds credibility.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">6.2</span>
+        <span class="step-title">Adding GitHub links (exact edit locations)</span>
+        <span class="step-tag tag-code">Code</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="note-block">
+          <div class="note-label">In the HTML file — search for these comments</div>
+          <div class="note-text">
+            In the portfolio HTML, each project card has two links. Find each by searching for <strong>REPO_NAME</strong> — replace with your actual GitHub repo path.<br><br>
+            Format: <strong>https://github.com/YOUR_USERNAME/REPO_NAME</strong><br><br>
+            For the Live link: search for <strong>↗ Live</strong> — the href="#" on each should be replaced with your deployed URL (Vercel, Netlify, etc.)<br><br>
+            For socials in the Contact section: search for <strong>sahilsharma</strong> — replace with your actual handles in each social link.<br><br>
+            Email: search for <strong>sahil@example.com</strong> — replace with your actual email (appears twice: the mailto: href and the displayed text).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">6.3</span>
+        <span class="step-title">Pre-launch checklist</span>
+        <span class="step-tag tag-system">System</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="checklist" id="checklist">
+          <div class="check-item"><div class="check-dot" onclick="toggleCheck(this)"></div><span>All 5 project screenshots added (webp, 840×520px)</span></div>
+          <div class="check-item"><div class="check-dot" onclick="toggleCheck(this)"></div><span>All 5 GitHub links updated</span></div>
+          <div class="check-item"><div class="check-dot" onclick="toggleCheck(this)"></div><span>All 5 live deployment URLs updated</span></div>
+          <div class="check-item"><div class="check-dot" onclick="toggleCheck(this)"></div><span>Email address updated (mailto + visible)</span></div>
+          <div class="check-item"><div class="check-dot" onclick="toggleCheck(this)"></div><span>Social handles updated (GitHub, Twitter, LinkedIn, Instagram, Dribbble)</span></div>
+          <div class="check-item"><div class="check-dot" onclick="toggleCheck(this)"></div><span>Project names + descriptions written</span></div>
+          <div class="check-item"><div class="check-dot" onclick="toggleCheck(this)"></div><span>Stack chips updated for each project</span></div>
+          <div class="check-item"><div class="check-dot" onclick="toggleCheck(this)"></div><span>About section text personalized</span></div>
+          <div class="check-item"><div class="check-dot" onclick="toggleCheck(this)"></div><span>Light/dark mode tested on mobile</span></div>
+          <div class="check-item"><div class="check-dot" onclick="toggleCheck(this)"></div><span>Custom cursor working in all browsers</span></div>
+          <div class="check-item"><div class="check-dot" onclick="toggleCheck(this)"></div><span>OG image created (1200×630px, dark mode screenshot of hero)</span></div>
+          <div class="check-item"><div class="check-dot" onclick="toggleCheck(this)"></div><span>Meta title: "Sahil Sharma — Designer × Engineer × Founder"</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header" onclick="toggleStep(this)">
+        <span class="step-index">6.4</span>
+        <span class="step-title">Deploy pipeline</span>
+        <span class="step-tag tag-code">Code</span>
+        <span class="step-arrow">▶</span>
+      </div>
+      <div class="step-body">
+        <div class="note-block">
+          <div class="note-label">Fastest deploy path</div>
+          <div class="note-text">
+            <strong>Option A — Vercel (recommended):</strong><br>
+            1. Push HTML + assets to GitHub repo "sahil-portfolio"<br>
+            2. Go to vercel.com → Import repo → Deploy<br>
+            3. Custom domain: add your domain in Vercel settings<br><br>
+            <strong>Option B — Netlify:</strong><br>
+            Drag-and-drop the folder at netlify.com/drop. Instant.<br><br>
+            <strong>Option C — GitHub Pages:</strong><br>
+            Settings → Pages → Source: main branch → /root → Save.<br>
+            URL: sahilsharma.github.io/sahil-portfolio<br><br>
+            <strong>Domain suggestion:</strong> sahilsharma.design or sahilsharma.dev or sahilbuilds.com
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function switchPhase(id){
+  document.querySelectorAll('.phase-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.phase-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idx=['p0','p1','p2','p3','p4','p5','p6'].indexOf(id);
+  document.querySelectorAll('.phase-tab')[idx].classList.add('active');
+}
+function toggleStep(header){
+  const step=header.parentElement;
+  step.classList.toggle('open');
+}
+function copyPrompt(btn){
+  const text=btn.nextElementSibling.textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copied!';
+    btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');},2000);
+  });
+}
+function toggleCheck(dot){
+  dot.classList.toggle('done');
+  const items=document.querySelectorAll('.check-dot.done').length;
+  const total=document.querySelectorAll('.check-dot').length;
+  document.getElementById('prog').style.width=(items/total*100)+'%';
+}
+</script>
+</body>
+</html>
