@@ -10,8 +10,6 @@ import { Skills } from '../components/Skills';
 import { Loader } from '../components/Loader';
 import { Manifesto } from '../components/Manifesto';
 import { WhyMe } from '../components/WhyMe';
-import { Contact } from '../components/Contact';
-
 export default function HomePage() {
   const [isLoaded, setIsLoaded] = useState(false);
   const location = useLocation();
@@ -103,10 +101,6 @@ export default function HomePage() {
 
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }} variants={sectionVariants}>
               <Skills />
-            </motion.div>
-
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }} variants={sectionVariants}>
-              <Contact />
             </motion.div>
 
           </motion.main>

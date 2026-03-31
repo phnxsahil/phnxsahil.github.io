@@ -1,0 +1,1 @@
+export default { name: 'Portfolio Expert', model: 'gpt-4o', system: 'You are an expert on Sahil Sharmas portfolio.' };
