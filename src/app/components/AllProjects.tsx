@@ -1,19 +1,37 @@
-import { motion } from 'motion/react';
+import { motion, type Variants } from 'motion/react';
 import { ArrowUpRight, Github } from 'lucide-react';
-import { useInView } from './useInView';
 import { projects } from '../data/projects';
 import { Link } from 'react-router';
 
 export function AllProjects() {
-  const { ref, isInView } = useInView();
   const allProjects = projects.filter(p => !p.featured);
 
+  const containerVariants: Variants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } }
+  };
+
+  const rowVariants: Variants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: { 
+      opacity: 1, 
+      x: 0, 
+      transition: { type: "spring", stiffness: 50, damping: 20, mass: 1 } 
+    }
+  };
+
+  const headerVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 60, damping: 20 } }
+  };
+
   return (
-    <section id="work" ref={ref} className="mx-auto max-w-[1540px] px-6 md:px-12" style={{ paddingTop: 'clamp(80px, 12vh, 160px)', paddingBottom: 'clamp(80px, 12vh, 160px)' }}>
+    <section id="work" className="mx-auto max-w-[1540px] px-6 md:px-12" style={{ paddingTop: 'clamp(80px, 12vh, 160px)', paddingBottom: 'clamp(80px, 12vh, 160px)' }}>
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.62 }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-20%" }}
+        variants={headerVariants}
         className="mb-16 flex flex-col gap-6 border-b border-[var(--border)] pb-12 md:mb-20 md:flex-row md:items-end md:justify-between"
       >
         <div>
@@ -32,13 +50,17 @@ export function AllProjects() {
         </p>
       </motion.div>
 
-      <div className="flex flex-col gap-4">
-        {allProjects.map((project, index) => (
+      <motion.div 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-20%" }}
+        variants={containerVariants}
+        className="flex flex-col gap-4"
+      >
+        {allProjects.map((project) => (
           <motion.article
             key={project.name}
-            initial={{ opacity: 0, y: 24 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.08 * index, duration: 0.62 }}
+            variants={rowVariants}
             className="build-row grid grid-cols-1 md:grid-cols-12 md:gap-12 relative group p-6 md:p-8 border border-[var(--border)] hover:bg-[var(--surface)] hover:border-[var(--accent-border)] rounded-sm transition-all duration-500 ease-[var(--ease-premium)]"
           >
             <div className="md:col-span-2 transition-transform duration-500 group-hover:translate-x-1">
@@ -99,7 +121,7 @@ export function AllProjects() {
             </div>
           </motion.article>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }

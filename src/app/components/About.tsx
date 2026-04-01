@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion, type Variants } from 'motion/react';
 import { useInView } from './useInView';
 
 export function About() {
@@ -13,6 +13,39 @@ export function About() {
     { value: '3', label: 'Product categories' },
   ];
 
+  const containerVariants: Variants = {
+    hidden: {},
+    visible: { 
+      transition: { 
+        staggerChildren: 0.1, 
+        delayChildren: 0.1 
+      } 
+    }
+  };
+
+  const maskVariants: Variants = {
+    hidden: { y: "120%", rotate: 2 },
+    visible: { 
+      y: "0%", 
+      rotate: 0,
+      transition: { type: "spring", stiffness: 60, damping: 20, mass: 1 } 
+    }
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, x: -30 },
+    visible: { 
+      opacity: 1, 
+      x: 0, 
+      transition: { type: "spring", stiffness: 50, damping: 20, mass: 1 } 
+    }
+  };
+
+  const fadeVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 1 } }
+  };
+
   return (
     <section
       id="about"
@@ -20,27 +53,39 @@ export function About() {
       className="relative z-[2] mx-auto grid max-w-7xl grid-cols-1 items-start gap-12 px-6 py-24 md:grid-cols-2 md:gap-[72px] md:px-12"
     >
       <motion.div
-        initial={{ opacity: 0, y: 36 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.7 }}
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-15%" }}
       >
-        <div className="mb-6 flex items-center gap-[10px]" style={{ color: 'var(--accent)' }}>
-          <div style={{ width: '20px', height: '1px', background: 'var(--accent)' }} />
-          <span className="eyebrow">Core Philosophy</span>
+        <div className="overflow-hidden p-1">
+          <motion.div variants={maskVariants} className="mb-6 flex items-center gap-[10px]" style={{ color: 'var(--accent)' }}>
+            <div style={{ width: '20px', height: '1px', background: 'var(--accent)' }} />
+            <span className="eyebrow">Core Philosophy</span>
+          </motion.div>
         </div>
 
-        <h2
-          className="section-title"
-          style={{
-            lineHeight: '0.85',
-            textTransform: 'uppercase',
-            fontSize: 'clamp(40px, 6vw, 72px)',
-          }}
-        >
-          Strategic <span className="text-[var(--text)]">Product</span> Engineering.
-        </h2>
+        <div className="flex flex-col gap-2">
+          <div className="overflow-hidden p-1">
+            <motion.h2
+              variants={maskVariants}
+              className="section-title text-[clamp(40px,6vw,72px)] leading-[0.85] tracking-tighter uppercase"
+            >
+              Strategic Product
+            </motion.h2>
+          </div>
+          <div className="overflow-hidden p-1">
+            <motion.h2
+              variants={maskVariants}
+              className="section-title text-[clamp(40px,6vw,72px)] leading-[0.85] tracking-tighter uppercase"
+            >
+              Engineering.
+            </motion.h2>
+          </div>
+        </div>
 
-        <p
+        <motion.p
+          variants={fadeVariants}
           className="body-text"
           style={{
             marginTop: '32px',
@@ -52,9 +97,9 @@ export function About() {
           I partner with early-stage founders to bridge the gap between abstract vision and
           production-ready infrastructure. My focus is on delivering high-integrity systems
           where technical architecture and user experience are treated as a unified discipline.
-        </p>
+        </motion.p>
 
-        <div className="mt-10 flex flex-wrap gap-2">
+        <motion.div variants={fadeVariants} className="mt-10 flex flex-wrap gap-2">
           {tags.map((tag) => (
             <span
               key={tag}
@@ -67,17 +112,21 @@ export function About() {
               {tag}
             </span>
           ))}
-        </div>
+        </motion.div>
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: 36 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.1, duration: 0.7 }}
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-15%" }}
         className="grid grid-cols-1 gap-4 sm:grid-cols-6"
       >
-        <div
-          className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 transition-all duration-300 hover:border-[var(--accent)]/30 hover:bg-[var(--surface2)] sm:col-span-4 md:p-8"
+        <motion.div
+          variants={itemVariants}
+          whileHover={{ scale: 1.05, y: -5, rotate: -1, zIndex: 10 }}
+          transition={{ type: "spring", stiffness: 300, damping: 15 }}
+          className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 transition-colors duration-300 hover:border-[var(--accent)]/30 hover:bg-[var(--surface2)] sm:col-span-4 md:p-8"
           style={{ backdropFilter: 'blur(10px)', boxShadow: 'var(--shadow-md)' }}
         >
           <div
@@ -93,10 +142,13 @@ export function About() {
           <div className="eyebrow" style={{ color: 'var(--muted2)', fontSize: '9px', letterSpacing: '0.2em' }}>
             {facts[0].label}
           </div>
-        </div>
+        </motion.div>
 
-        <div
-          className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 transition-all duration-300 hover:border-[var(--accent)]/30 hover:bg-[var(--surface2)] sm:col-span-2 md:p-8"
+        <motion.div
+          variants={itemVariants}
+          whileHover={{ scale: 1.05, y: -5, rotate: 1, zIndex: 10 }}
+          transition={{ type: "spring", stiffness: 300, damping: 15 }}
+          className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 transition-colors duration-300 hover:border-[var(--accent)]/30 hover:bg-[var(--surface2)] sm:col-span-2 md:p-8"
           style={{ backdropFilter: 'blur(10px)', boxShadow: 'var(--shadow-md)' }}
         >
           <div
@@ -108,14 +160,17 @@ export function About() {
           <div className="eyebrow" style={{ color: 'var(--muted2)', fontSize: '9px', letterSpacing: '0.2em' }}>
             {facts[1].label}
           </div>
-        </div>
+        </motion.div>
 
-        <div
-          className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 transition-all duration-300 hover:border-[var(--accent)]/30 hover:bg-[var(--surface2)] sm:col-span-2 md:p-8"
+        <motion.div
+          variants={itemVariants}
+          whileHover={{ scale: 1.05, y: -5, rotate: -1, zIndex: 10 }}
+          transition={{ type: "spring", stiffness: 300, damping: 15 }}
+          className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 transition-colors duration-300 hover:border-[var(--accent)]/30 hover:bg-[var(--surface2)] sm:col-span-2 md:p-8"
           style={{ backdropFilter: 'blur(10px)', boxShadow: 'var(--shadow-md)' }}
         >
           <div
-            className="tabular mb-2"
+            className="tabular mb-2 flex items-center"
             style={{ fontFamily: 'var(--ff-sans)', fontWeight: 800, fontSize: '48px', lineHeight: '1', color: 'var(--text)', letterSpacing: '-0.02em' }}
           >
             <span className="text-[var(--accent)]">0</span>
@@ -125,10 +180,13 @@ export function About() {
           <div className="eyebrow" style={{ color: 'var(--muted2)', fontSize: '9px', letterSpacing: '0.2em' }}>
             {facts[2].label}
           </div>
-        </div>
+        </motion.div>
 
-        <div
-          className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 transition-all duration-300 hover:border-[var(--accent)]/30 hover:bg-[var(--surface2)] sm:col-span-4 md:p-8"
+        <motion.div
+          variants={itemVariants}
+          whileHover={{ scale: 1.05, y: -5, rotate: 1, zIndex: 10 }}
+          transition={{ type: "spring", stiffness: 300, damping: 15 }}
+          className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 transition-colors duration-300 hover:border-[var(--accent)]/30 hover:bg-[var(--surface2)] sm:col-span-4 md:p-8"
           style={{ backdropFilter: 'blur(10px)', boxShadow: 'var(--shadow-md)' }}
         >
           <div
@@ -144,13 +202,14 @@ export function About() {
           <div className="eyebrow" style={{ color: 'var(--muted2)', fontSize: '9px', letterSpacing: '0.2em' }}>
             {facts[3].label}
           </div>
-        </div>
+        </motion.div>
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: 36 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.2, duration: 0.7 }}
+        initial={{ opacity: 0, y: 36, scale: 0.95 }}
+        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+        viewport={{ once: true, margin: "-10%" }}
+        transition={{ delay: 0.2, type: "spring", stiffness: 100, damping: 20 }}
         className="relative mt-8 overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] md:col-span-2"
         style={{ padding: 'clamp(24px, 5vw, 48px) clamp(20px, 4vw, 40px)', boxShadow: 'var(--shadow-lg)' }}
       >
@@ -172,12 +231,12 @@ export function About() {
           <div className="mt-8 flex items-center gap-4">
             <div className="h-[1px] w-8 bg-[var(--accent)]" />
             <div className="flex flex-col">
-              <cite className="eyebrow" style={{ color: 'var(--text)', fontStyle: 'normal', fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em' }}>
-                SAHIL SHARMA
-              </cite>
-              <span style={{ fontSize: '9px', color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: '2px' }}>
-                Design Engineer
-              </span>
+               <cite className="eyebrow" style={{ color: 'var(--text)', fontStyle: 'normal', fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em' }}>
+                 SAHIL SHARMA
+               </cite>
+               <span style={{ fontSize: '9px', color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: '2px' }}>
+                 Design Engineer
+               </span>
             </div>
           </div>
         </div>

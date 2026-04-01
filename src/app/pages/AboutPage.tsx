@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion, type Variants } from 'motion/react';
 import { ArrowLeft, ExternalLink, Mail, Twitter, Github, Linkedin, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router';
 import { useEffect } from 'react';
@@ -8,13 +8,37 @@ export default function AboutPage() {
     window.scrollTo(0, 0);
   }, []);
 
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] as any },
-    },
+  const containerVariants: Variants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } }
+  };
+
+  const maskVariants: Variants = {
+    hidden: { y: "120%", rotate: 2 },
+    visible: { 
+      y: "0%", 
+      rotate: 0,
+      transition: { type: "spring", stiffness: 60, damping: 20, mass: 1 } 
+    }
+  };
+
+  const lineVariants: Variants = {
+    hidden: { scaleX: 0 },
+    visible: { scaleX: 1, transition: { type: "spring", stiffness: 50, damping: 20 } }
+  };
+
+  const cardVariants: Variants = {
+    hidden: { opacity: 0, x: -30 },
+    visible: { 
+      opacity: 1, 
+      x: 0, 
+      transition: { type: "spring", stiffness: 50, damping: 20, mass: 1 } 
+    }
+  };
+
+  const fadeVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 1 } }
   };
 
   const principles = [
@@ -33,12 +57,35 @@ export default function AboutPage() {
 
       <div className="grid grid-cols-1 gap-16 md:grid-cols-12 md:gap-32">
         <div className="md:col-span-8">
-          <motion.div initial="hidden" animate="visible" variants={sectionVariants} className="mb-24">
-            <span className="eyebrow mb-6 block text-[var(--accent)]">Origin // Philosophy</span>
-            <h1 className="section-title mb-12" style={{ fontSize: 'clamp(56px, 10vw, 120px)', lineHeight: '0.85', textTransform: 'uppercase' }}>
-              Engineering <span className="opacity-40">Resonance</span> Through Software.
-            </h1>
-            <div className="flex flex-col gap-10">
+          <motion.div 
+            initial="hidden" 
+            animate="visible" 
+            variants={containerVariants} 
+            className="mb-24"
+          >
+            <div className="overflow-hidden p-1">
+              <motion.span variants={maskVariants} className="eyebrow mb-6 block text-[var(--accent)]">Origin // Philosophy</motion.span>
+            </div>
+            
+            <div className="flex flex-col gap-2 mb-12">
+              <div className="overflow-hidden p-1">
+                <motion.h1 variants={maskVariants} className="section-title text-[clamp(56px,10vw,120px)] leading-[0.85] tracking-[-0.04em] uppercase">
+                  Engineering
+                </motion.h1>
+              </div>
+              <div className="overflow-hidden p-1">
+                <motion.h1 variants={maskVariants} className="section-title text-[clamp(56px,10vw,120px)] leading-[0.85] tracking-[-0.04em] uppercase">
+                  <span className="opacity-40">Resonance</span> Through
+                </motion.h1>
+              </div>
+              <div className="overflow-hidden p-1">
+                <motion.h1 variants={maskVariants} className="section-title text-[clamp(56px,10vw,120px)] leading-[0.85] tracking-[-0.04em] uppercase">
+                  Software.
+                </motion.h1>
+              </div>
+            </div>
+
+            <motion.div variants={fadeVariants} className="flex flex-col gap-10">
               <p className="body-text text-[22px] font-medium leading-tight opacity-90 md:text-[28px]">
                 I am a Product Engineer focused on the intersection of strategic design and robust architecture. I build from the 0-1 stage, helping founders turn abstract visions into high-performing systems.
               </p>
@@ -48,28 +95,50 @@ export default function AboutPage() {
               <p className="body-text max-w-[70ch] text-[18px] leading-relaxed opacity-70">
                 Technically, I specialize in the React/Next.js ecosystem on the frontend and FastAPI/Python or Node.js on the backend, with a heavy emphasis on real-time systems, vector search, and AI integration.
               </p>
-            </div>
+            </motion.div>
           </motion.div>
 
-          <motion.section initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariants} className="mb-24 md:mb-32">
-            <h2 className="section-title mb-12 md:mb-16" style={{ fontSize: 'clamp(32px, 5vw, 64px)' }}>
-              Core Principles
-            </h2>
+          <motion.section 
+            initial="hidden" 
+            whileInView="visible" 
+            viewport={{ once: true, margin: "-15%" }} 
+            variants={containerVariants} 
+            className="mb-24 md:mb-32"
+          >
+            <div className="overflow-hidden p-2">
+              <motion.h2 variants={maskVariants} className="section-title mb-12 md:mb-16 uppercase tracking-tight" style={{ fontSize: 'clamp(32px, 5vw, 64px)' }}>
+                Core Principles
+              </motion.h2>
+            </div>
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-12">
               {principles.map((p, i) => (
-                <div key={i} className="flex flex-col gap-4 border border-[var(--border)] bg-[var(--surface)] p-6 transition-all hover:border-[var(--accent-border)] md:p-8">
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--accent)]">P-0{i + 1}</span>
-                  <h3 className="eyebrow text-[16px] text-[var(--text)]">{p.title}</h3>
+                <motion.div 
+                  key={i} 
+                  variants={cardVariants}
+                  className="flex flex-col gap-4 border border-[var(--border)] bg-[var(--surface)] p-6 transition-all hover:border-[var(--accent-border)] md:p-8 group"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--accent)]">P-0{i + 1}</span>
+                    <motion.div variants={lineVariants} className="h-[1px] w-8 bg-[var(--accent)] origin-right" />
+                  </div>
+                  <h3 className="eyebrow text-[16px] text-[var(--text)] transition-colors group-hover:text-[var(--accent)]">{p.title}</h3>
                   <p className="body-text text-[14px] leading-relaxed opacity-60">{p.desc}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
           </motion.section>
 
-          <motion.section initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariants}>
-            <h2 className="section-title mb-12" style={{ fontSize: 'clamp(32px, 5vw, 64px)' }}>
-              Beyond the Terminal
-            </h2>
+          <motion.section 
+            initial="hidden" 
+            whileInView="visible" 
+            viewport={{ once: true, margin: "-10%" }} 
+            variants={containerVariants}
+          >
+            <div className="overflow-hidden p-2">
+              <motion.h2 variants={maskVariants} className="section-title mb-12 uppercase tracking-tight" style={{ fontSize: 'clamp(32px, 5vw, 64px)' }}>
+                Beyond the Terminal
+              </motion.h2>
+            </div>
             <div className="flex flex-col gap-8 opacity-70">
               <p className="body-text text-[18px]">
                 When I'm not architecting production systems, you'll likely find me diving deep into the history of interface design, experimenting with analog synthesis, or exploring the future of decentralized networks. I believe that being a better engineer requires a wide field of curious interest beyond the code itself.

@@ -7,20 +7,11 @@ interface LoaderProps {
 
 export function Loader({ onComplete }: LoaderProps) {
   const [percent, setPercent] = useState(0);
-  const [isFinished, setIsFinished] = useState(false);
-  const [activeSegment, setActiveSegment] = useState(0);
-
-  const calibrationLog = [
-    "INITIALIZING_CORE_SYSTEM",
-    "LOADING_VISUAL_ASSETS",
-    "SYNCING_AUDIO_LATENCY",
-    "CALIBRATING_INTERACTIONS",
-    "ARCHIVE_SYSTEM_READY"
-  ];
+  const [phase, setPhase] = useState<'counting' | 'name' | 'splitting' | 'done'>('counting');
 
   useEffect(() => {
-    const duration = 2400;
-    const interval = 20;
+    const duration = 1800;
+    const interval = 18;
     const steps = duration / interval;
     const increment = 100 / steps;
 
@@ -28,10 +19,17 @@ export function Loader({ onComplete }: LoaderProps) {
       setPercent(prev => {
         if (prev >= 100) {
           clearInterval(timer);
+
+          // Beat 1: Show the name (600ms after count finishes)
+          setTimeout(() => setPhase('name'), 400);
+
+          // Beat 2: Start splitting (1400ms total pause)
           setTimeout(() => {
-            setIsFinished(true);
-            setTimeout(onComplete, 1000);
-          }, 800);
+            setPhase('splitting');
+            // Beat 3: Signal done (800ms after split starts)
+            setTimeout(onComplete, 900);
+          }, 1600);
+
           return 100;
         }
         return prev + increment;
@@ -41,70 +39,142 @@ export function Loader({ onComplete }: LoaderProps) {
     return () => clearInterval(timer);
   }, [onComplete]);
 
-  useEffect(() => {
-    setActiveSegment(Math.floor((percent / 100) * (calibrationLog.length - 1)));
-  }, [percent]);
+  const displayValue = Math.round(percent).toString().padStart(3, '0');
+  const isCounting = phase === 'counting';
+  const showName = phase === 'name' || phase === 'splitting';
+  const isSplitting = phase === 'splitting';
 
   return (
     <AnimatePresence>
-      {!isFinished && (
+      {phase !== 'done' && (
         <motion.div
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed inset-0 z-[100] bg-[var(--bg)] flex items-center justify-center p-8 overflow-hidden"
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden pointer-events-none"
         >
-          <div className="flex flex-col items-center gap-8 relative max-w-[320px] w-full">
-            <div className="flex flex-col items-center gap-4 w-full">
-              <AnimatePresence mode="wait">
-                <motion.span 
-                  key={activeSegment}
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -5 }}
-                  transition={{ duration: 0.4 }}
-                  className="font-mono text-[9px] tracking-[0.4em] font-bold text-[var(--accent)] uppercase text-center h-[12px]"
-                >
-                  {calibrationLog[activeSegment]}
-                </motion.span>
-              </AnimatePresence>
-              
-              <div className="w-full h-[1px] bg-[var(--border-hi)] relative overflow-hidden mt-2">
+          {/* TOP PANEL — SAHIL rides up */}
+          <motion.div 
+            initial={{ y: 0 }}
+            animate={{ y: isSplitting ? "-100%" : 0 }}
+            transition={{ 
+              type: "spring", 
+              stiffness: 45, 
+              damping: 18, 
+              mass: 1.2,
+              delay: isSplitting ? 0 : 0
+            }}
+            className="absolute top-0 left-0 w-full h-1/2 bg-[var(--bg)] z-10 flex flex-col items-center justify-end overflow-hidden"
+          >
+             <AnimatePresence>
+               {showName && (
+                 <motion.div
+                   initial={{ y: 80, opacity: 0, scale: 0.95 }}
+                   animate={{ y: 0, opacity: 1, scale: 1 }}
+                   transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                   className="text-[var(--accent)] mb-[-0.12em]"
+                   style={{
+                     fontFamily: 'var(--ff-cabinet), sans-serif',
+                     fontSize: 'clamp(64px, 14vw, 280px)',
+                     fontWeight: 900,
+                     fontStyle: 'italic',
+                     lineHeight: 1
+                   }}
+                 >
+                   SAHIL
+                 </motion.div>
+               )}
+             </AnimatePresence>
+          </motion.div>
+          
+          {/* BOTTOM PANEL — SHARMA rides down */}
+          <motion.div 
+            initial={{ y: 0 }}
+            animate={{ y: isSplitting ? "100%" : 0 }}
+            transition={{ 
+              type: "spring", 
+              stiffness: 45, 
+              damping: 18, 
+              mass: 1.2,
+              delay: isSplitting ? 0.05 : 0
+            }}
+            className="absolute bottom-0 left-0 w-full h-1/2 bg-[var(--bg)] z-10 flex flex-col items-center justify-start overflow-hidden"
+          >
+             <AnimatePresence>
+                {showName && (
+                  <motion.div
+                    initial={{ y: -80, opacity: 0, scale: 0.95 }}
+                    animate={{ y: 0, opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
+                    className="mt-[-0.12em]"
+                    style={{
+                      fontFamily: 'var(--ff-cabinet), sans-serif',
+                      fontSize: 'clamp(64px, 14vw, 280px)',
+                      fontWeight: 900,
+                      color: 'transparent',
+                      WebkitTextStroke: '2px var(--accent)',
+                      fontStyle: 'italic',
+                      lineHeight: 1
+                    }}
+                  >
+                    SHARMA
+                  </motion.div>
+                )}
+             </AnimatePresence>
+
+             {/* Aperture Cut Line — only glows when split begins */}
+             <motion.div 
+                initial={{ scaleX: 0, opacity: 0 }}
+                animate={{ 
+                  scaleX: showName ? 1 : 0, 
+                  opacity: showName ? 0.6 : 0,
+                  boxShadow: isSplitting 
+                    ? '0 0 40px var(--accent), 0 0 80px var(--accent)' 
+                    : '0 0 10px var(--accent)'
+                }}
+                className="h-[2px] w-full bg-[var(--accent)] origin-center"
+                style={{ position: 'absolute', top: -1 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+             />
+          </motion.div>
+
+          {/* Central Numeric Counter */}
+          <div className="relative z-20 w-full flex flex-col items-center justify-center">
+             <AnimatePresence mode="wait">
+               {isCounting && (
                  <motion.div 
-                   animate={{ width: `${percent}%` }}
-                   className="absolute inset-y-0 left-0 bg-[var(--accent)]"
-                 />
-              </div>
-              
-              <div className="flex justify-between w-full mt-1">
-                 <span className="font-mono text-[8px] opacity-20 tracking-widest uppercase">SY_CALIBRATION</span>
-                 <span className="font-mono text-[8px] opacity-60 tracking-widest text-[var(--accent)] tabular-nums">{Math.round(percent)}%</span>
-              </div>
-            </div>
+                    key="counter"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.15, filter: "blur(12px)" }}
+                    transition={{ duration: 0.35 }}
+                    className="leading-none tracking-tighter flex"
+                    style={{
+                      fontFamily: 'var(--ff-cabinet), sans-serif',
+                      fontSize: 'clamp(140px, 28vw, 600px)',
+                      fontWeight: 900,
+                      color: 'var(--accent)',
+                      fontStyle: 'italic',
+                      WebkitTextStroke: '1px var(--accent-border)'
+                    }}
+                  >
+                    <div className="w-[1ch] text-right">{displayValue[0]}</div>
+                    <div className="w-[1ch] text-right">{displayValue[1]}</div>
+                    <div className="w-[1ch] text-right">{displayValue[2]}</div>
+                 </motion.div>
+               )}
+             </AnimatePresence>
 
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.05 }}
-              className="font-mono text-[7px] leading-relaxed uppercase absolute inset-x-[-20%] bottom-[-140%] pointer-events-none text-center"
-            >
-              [ ACCESS_GRANTED ] // DELPHI_ENGINE_STABLE // HASH_0x82A1B
-            </motion.div>
-          </div>
-
-          {/* Minimal Meta-data markings */}
-          <div className="absolute top-12 left-12 flex flex-col gap-2 font-mono text-[8px] opacity-20">
-             <div className="flex items-center gap-2">
-                <div className="w-1 h-1 bg-[var(--accent)]" />
-                <span>SS.portfolio_v4</span>
-             </div>
-          </div>
-
-          <div className="absolute bottom-12 right-12 font-mono text-[8px] opacity-20 flex flex-col gap-1 items-end">
-             <span>EST_LATENCY: 8ms</span>
-             <div className="flex gap-2 items-center">
-                <div className="w-2 h-2 rounded-full border border-[var(--accent)]" />
-                <span>BOOT_READY</span>
-             </div>
+             <AnimatePresence>
+               {isCounting && (
+                 <motion.p
+                   initial={{ opacity: 0, y: 10 }}
+                   animate={{ opacity: 0.5, y: 0 }}
+                   exit={{ opacity: 0, y: -10 }}
+                   transition={{ duration: 0.3 }}
+                   className="eyebrow absolute top-[105%] text-[var(--accent)] font-mono text-[10px] tracking-[0.3em]"
+                 >
+                   ENGINEER // ARCHITECT
+                 </motion.p>
+               )}
+             </AnimatePresence>
           </div>
         </motion.div>
       )}

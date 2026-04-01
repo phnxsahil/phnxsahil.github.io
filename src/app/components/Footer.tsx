@@ -1,23 +1,62 @@
-import { motion } from 'motion/react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import { Mail, Twitter, Github, Linkedin, ArrowUp } from 'lucide-react';
+import { useRef } from 'react';
 
 export function Footer() {
+  const containerRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end end"]
+  });
+
+  const bgY = useTransform(scrollYProgress, [0, 1], ["-30%", "10%"]);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <footer className="relative z-[2] mt-32 border-t border-[var(--border)] bg-[var(--bg)] pt-24 pb-12 overflow-hidden">
-      {/* Sleek Background Watermark */}
-      <div className="absolute inset-x-0 bottom-[-15%] flex items-center justify-center pointer-events-none select-none overflow-hidden opacity-70">
-        <span 
-          className="wm-cabinet whitespace-nowrap leading-none"
-          style={{ fontSize: 'clamp(120px, 25vw, 500px)', fontWeight: 900, textTransform: 'uppercase' }}
+    <footer ref={containerRef} className="relative z-[2] mt-32 border-t border-[var(--border)] bg-[var(--bg)] pt-24 pb-12 overflow-hidden">
+      
+      {/* Scrolling Marquee Watermark — sits BEHIND the "Stay in Touch" content */}
+      <motion.div 
+        style={{ y: bgY }}
+        className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden"
+      >
+        <motion.div
+          className="flex items-center whitespace-nowrap"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ x: { duration: 30, repeat: Infinity, ease: "linear" } }}
+          style={{ minWidth: '200%', opacity: 0.12 }}
         >
-          SAHIL SHARMA
-        </span>
-      </div>
+          {Array.from({ length: 12 }).map((_, i) => (
+            <span 
+              key={i} 
+              className="flex items-center gap-6 shrink-0 px-6"
+              style={{
+                fontFamily: 'var(--ff-cabinet), sans-serif',
+                fontSize: 'clamp(80px, 14vw, 200px)',
+                fontWeight: 900,
+                fontStyle: 'italic',
+                textTransform: 'uppercase',
+                lineHeight: 1,
+                color: i % 2 === 0 ? 'var(--accent)' : 'transparent',
+                WebkitTextStroke: i % 2 === 0 ? 'none' : '2px var(--accent)',
+              }}
+            >
+              SS. ARCHIVE
+              <span 
+                className="inline-block mx-4"
+                style={{ fontSize: '0.25em', verticalAlign: 'middle', opacity: 0.5 }}
+              >
+                ◆
+              </span>
+            </span>
+          ))}
+        </motion.div>
+      </motion.div>
 
+      {/* Footer Content — sits ON TOP of the watermark */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
         <div className="mb-24 grid grid-cols-1 gap-16 md:grid-cols-2">
           <div className="flex flex-col gap-8">
@@ -25,7 +64,7 @@ export function Footer() {
               STAY IN <br/>TOUCH.
             </h2>
             <div className="flex flex-col gap-4">
-               <p className="body-text max-w-[32ch] text-[15px] opacity-60">
+               <p className="body-text max-w-[32ch] text-[16px] opacity-70 leading-relaxed">
                  Always open to technical discovery sessions, high-integrity builds, and sonic exploration.
                </p>
             </div>
@@ -42,8 +81,9 @@ export function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ y: -5, color: 'var(--accent)' }}
-                  className="p-3 border border-[var(--border)] rounded-sm text-[var(--muted2)] transition-colors"
+                  whileHover={{ y: -8, scale: 1.15, rotate: i % 2 === 0 ? 5 : -5 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  className="p-3 border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--accent)] hover:text-[var(--bg)] hover:border-[var(--accent)] rounded-sm text-[var(--muted2)] transition-colors shadow-sm"
                 >
                   <social.icon size={18} />
                 </motion.a>
@@ -89,5 +129,3 @@ export function Footer() {
     </footer>
   );
 }
-
-

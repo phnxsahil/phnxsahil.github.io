@@ -11,8 +11,8 @@ function TiltCard({ children, className }: { children: React.ReactNode, classNam
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const mouseXSpring = useSpring(x);
-  const mouseYSpring = useSpring(y);
+  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
+  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
 
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
@@ -91,8 +91,10 @@ export function FeaturedProjects() {
               <motion.article
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ delay: 0.1 * idx, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                className="project-case surface flex flex-col h-full relative p-5 md:p-8 rounded-sm overflow-hidden"
+                whileHover={{ scale: 1.02, zIndex: 10 }}
+                transition={{ type: "spring", stiffness: 150, damping: 15, delay: 0.1 * idx }}
+                className="project-case flex flex-col h-full relative p-5 md:p-8 rounded-sm overflow-hidden border border-[var(--border)] bg-[var(--surface)] transition-colors hover:border-[var(--accent)]/50"
+                style={{ boxShadow: 'var(--shadow-md)' }}
               >
                 <Link
                   to={`/project/${study.id}`}

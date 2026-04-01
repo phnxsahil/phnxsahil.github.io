@@ -1,7 +1,36 @@
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, type Variants } from 'motion/react';
 import { ArrowRight, Github, Twitter, Linkedin } from 'lucide-react';
 import { Marquee } from './Marquee';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
+// 21st.dev inspired Magnetic Component
+function Magnetic({ children, strength = 0.2 }: { children: React.ReactNode, strength?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouse = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { clientX, clientY } = e;
+    if (!ref.current) return;
+    const { height, width, left, top } = ref.current.getBoundingClientRect();
+    const middleX = clientX - (left + width / 2);
+    const middleY = clientY - (top + height / 2);
+    setPosition({ x: middleX * strength, y: middleY * strength });
+  };
+
+  const reset = () => setPosition({ x: 0, y: 0 });
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouse}
+      onMouseLeave={reset}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: "spring", stiffness: 200, damping: 20, mass: 0.1 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export function Hero() {
   const roles = [
@@ -12,41 +41,6 @@ export function Hero() {
   ];
   const [roleIndex, setRoleIndex] = useState(0);
 
-  // Typewriter states
-  const words = ["SHARMA", "sharmajikabeta"];
-  const [index, setIndex] = useState(0); 
-  const [subIndex, setSubIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [blink, setBlink] = useState(true);
-
-  // Typing effect
-  useEffect(() => {
-    if (subIndex === words[index].length + 1 && !isDeleting) {
-      setTimeout(() => setIsDeleting(true), 2000);
-      return;
-    }
-
-    if (subIndex === 0 && isDeleting) {
-      setIsDeleting(false);
-      setIndex((prev) => (prev + 1) % words.length);
-      return;
-    }
-
-    const timeout = setTimeout(() => {
-      setSubIndex((prev) => prev + (isDeleting ? -1 : 1));
-    }, isDeleting ? 75 : 150);
-
-    return () => clearTimeout(timeout);
-  }, [subIndex, index, isDeleting]);
-
-  // Blink effect for cursor
-  useEffect(() => {
-    const timeout2 = setTimeout(() => {
-      setBlink((prev) => !prev);
-    }, 500);
-    return () => clearTimeout(timeout2);
-  }, [blink]);
-
   useEffect(() => {
     const interval = setInterval(() => {
       setRoleIndex((prev) => (prev + 1) % roles.length);
@@ -54,11 +48,35 @@ export function Hero() {
     return () => clearInterval(interval);
   }, []);
 
-  const scrollToContact = () => {
-    const element = document.getElementById('contact');
+  const scrollToExplore = () => {
+    const element = document.getElementById('about');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const containerVariants: Variants = {
+    hidden: {},
+    visible: { 
+      transition: { 
+        staggerChildren: 0.1, 
+        delayChildren: 0.6 // Increased for cinematic aperture opening
+      } 
+    }
+  };
+
+  const maskVariants: Variants = {
+    hidden: { y: "125%", rotate: 1 },
+    visible: { 
+      y: "0%", 
+      rotate: 0,
+      transition: { type: "spring", stiffness: 60, damping: 22, mass: 1 } 
+    }
+  };
+
+  const fadeVariants: Variants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0, transition: { duration: 1.2, delay: 0.6, ease: [0.22, 1, 0.36, 1] } }
   };
 
   return (
@@ -67,195 +85,140 @@ export function Hero() {
       className="relative flex flex-col justify-end overflow-hidden"
       style={{ minHeight: '100dvh', paddingTop: 'clamp(80px, 11vh, 140px)' }}
     >
-      {/* Dynamic Grid Layer - Audio Reactive */}
+      {/* Background Grid Layer - Optimized */}
       <motion.div 
-        animate={{ 
-          opacity: 0.35,
-          scale: 1
-        }}
-        className="absolute inset-0 z-0 hero-grid" 
-        style={{ 
-          opacity: 0.05
-        }} 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.25 }}
+        transition={{ duration: 1.5 }}
+        className="absolute inset-0 z-0 hero-grid pointer-events-none" 
       />
 
-      {/* Focus Darkening - Radial gradient behind text */}
       <div 
         className="absolute inset-0 z-[1] pointer-events-none"
-        style={{
-          background: 'var(--hero-vignette)'
-        }}
+        style={{ background: 'var(--hero-vignette)', opacity: 0.7 }}
       />
 
-      <div className="relative z-10 w-full px-6 md:px-12 flex-grow flex flex-col justify-center max-w-[1400px] mx-auto">
+      {/* MASSIVE SPLIT TYPOGRAPHY (MAT VOYCE STYLE) OVERLAPPING SECTIONS */}
+      <motion.div 
+        initial={{ x: '-60vw', opacity: 0 }}
+        animate={{ x: '0vw', opacity: 0.65 }}
+        transition={{ duration: 4.5, ease: [0.19, 1, 0.22, 1], delay: 0.4 }}
+        className="voyce-text-top flex"
+      >
+        SAHIL
+      </motion.div>
+
+      <motion.div 
+        initial={{ x: '60vw', opacity: 0 }}
+        animate={{ x: '0vw', opacity: 0.55 }}
+        transition={{ duration: 4.5, ease: [0.19, 1, 0.22, 1], delay: 0.6 }}
+        className="voyce-text-bottom flex"
+      >
+        SHARMA
+      </motion.div>
+
+      {/* CENTRAL CARD CONTENT */}
+      <div className="relative z-10 w-full px-6 flex-grow flex flex-col items-center justify-center pointer-events-none">
         <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.12,
-                delayChildren: 0.2
-              }
-            }
-          }}
-          className="flex flex-col items-start"
+           initial="hidden"
+           animate="visible"
+           variants={containerVariants}
+           className="pointer-events-auto w-full flex justify-center"
         >
-          <motion.div 
-            variants={{
-              hidden: { opacity: 0, y: 15 },
-              visible: { opacity: 1, y: 0 }
-            }}
-            className="flex items-center gap-4 mb-2" 
-          >
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--muted2)]">
-              <motion.div 
-                animate={{ scale: 1, opacity: 0.6 }}
-                className="w-[6px] h-[6px] rounded-full bg-[var(--accent)] shadow-[0_0_8px_var(--accent)]" 
-              />
-              <div className="relative h-[18px] w-[min(210px,55vw)] overflow-hidden translate-y-[0.5px]">
-                <AnimatePresence mode="popLayout">
-                  <motion.span
-                    key={roleIndex}
-                    initial={{ y: 15, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -15, opacity: 0 }}
-                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                    className="absolute inset-y-0 left-0 flex items-center eyebrow font-bold text-[9px] tracking-[0.16em]"
-                    style={{ color: 'var(--text)' }}
-                  >
-                    {roles[roleIndex]}
-                  </motion.span>
-                </AnimatePresence>
+          <div className="voyce-center-card flex flex-col items-start w-full mx-auto backdrop-blur-xl rounded-sm">
+            
+            <motion.div variants={fadeVariants} className="flex items-center gap-4 mb-6">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border)] bg-[var(--bg)] shadow-inner text-[var(--muted2)]">
+                <motion.div 
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.6, 1, 0.6] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  className="w-[6px] h-[6px] rounded-full bg-[var(--accent)] shadow-[0_0_8px_var(--accent)]" 
+                />
+                <div className="relative h-[18px] w-[min(210px,55vw)] overflow-hidden translate-y-[0.5px]">
+                  <AnimatePresence mode="popLayout">
+                    <motion.span
+                      key={roleIndex}
+                      initial={{ y: 15, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -15, opacity: 0 }}
+                      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                      className="absolute inset-y-0 left-0 flex items-center eyebrow font-bold text-[9px] tracking-[0.16em] text-[var(--text)]"
+                    >
+                      {roles[roleIndex]}
+                    </motion.span>
+                  </AnimatePresence>
+                </div>
+              </div>
+            </motion.div>
+
+            <div className="flex flex-col gap-1 mb-6">
+              <div className="overflow-hidden p-1">
+                <motion.h1 variants={maskVariants} className="text-[clamp(32px,4vw,48px)] font-black leading-[0.9] tracking-tight text-[var(--text)]" style={{ fontFamily: 'var(--ff-cabinet)' }}>
+                  BUILDING RESONANT
+                </motion.h1>
+              </div>
+              <div className="overflow-hidden p-1">
+                <motion.h1 variants={maskVariants} className="text-[clamp(32px,4vw,48px)] font-black leading-[0.9] tracking-tight text-[var(--accent)] italic" style={{ fontFamily: 'var(--ff-cabinet)' }}>
+                  DIGITAL SYSTEMS.
+                </motion.h1>
               </div>
             </div>
-          </motion.div>
 
-          <motion.h1
-            variants={{
-              hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0 }
-            }}
-            style={{
-              fontSize: 'clamp(44px, 11vw, 140px)',
-              lineHeight: '0.85',
-              letterSpacing: '-0.04em',
-              textTransform: 'uppercase',
-              marginBottom: '32px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'start',
-            }}
-          >
-            <motion.span 
-              animate={{ x: 0 }}
-              style={{ color: 'var(--text)', fontFamily: 'var(--ff-sans)', fontWeight: 800 }}
-            >
-              SAHIL
-            </motion.span>
-            <div 
-              style={{ 
-                fontFamily: 'var(--ff-sans)', 
-                fontWeight: 300,
-                marginTop: '-0.05em',
-                display: 'inline-flex',
-                alignItems: 'center',
-                minHeight: '1.2em'
-              }}
-            >
-              <motion.span 
-                animate={{ 
-                  color: 'var(--text)',
-                  scale: 1 
-                }}
-                transition={{ duration: 0.1 }}
-                style={{ 
-                  background: `linear-gradient(to right, var(--text) 0%, var(--accent) 150%)`,
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  position: 'relative',
-                  display: 'inline-block'
-                }}
-              >
-                {words[index].substring(0, subIndex)}
-              </motion.span>
-              <span 
-                style={{ 
-                  display: 'inline-block',
-                  width: '3px', 
-                  height: '0.9em', 
-                  background: 'var(--accent)', 
-                  marginLeft: '6px',
-                  opacity: blink ? 1 : 0,
-                  transition: 'opacity 0.1s'
-                }}
-              />
+            <div className="overflow-hidden p-1 mb-8">
+              <motion.p variants={maskVariants} className="body-text max-w-[46ch] text-[16px] md:text-[18px] font-normal leading-[1.6] text-[var(--muted2)]">
+                I engineer high-performance interfaces for <span className="text-[var(--text)] font-medium">founders</span> and <span className="text-[var(--text)] font-medium">investors</span>, bridging the gap between strategic design and production architecture.
+              </motion.p>
             </div>
-          </motion.h1>
 
-          <motion.p
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              visible: { opacity: 1, y: 0 }
-            }}
-            className="body-text max-w-[54ch] text-[18px] md:text-[21px] font-normal"
-            style={{ lineHeight: '1.5', color: 'var(--muted2)' }}
-          >
-            I engineer high-performance digital products for <span className="text-[var(--text)] font-medium">founders</span> and <span className="text-[var(--text)] font-medium">investors</span>, bridging the gap between strategic design and production-grade architecture.
-          </motion.p>
-
-          <motion.div 
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              visible: { opacity: 1, y: 0 }
-            }}
-            className="mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-6 sm:gap-8 w-full sm:w-auto"
-          >
-            <motion.button 
-              onClick={scrollToContact} 
-              whileHover={{ y: -3, scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-              className="btn-cta bg-[var(--accent)] text-black px-6 sm:px-10 py-4 h-[56px] group transition-all duration-400 w-full sm:w-auto"
-              style={{ 
-                border: 'none',
-                boxShadow: '0 4px 14px 0 var(--accent-dim)'
-              }}
-            >
-              <span className="relative z-10 flex items-center font-bold uppercase tracking-wider text-[11px]">
-                Start Project Brief
-                <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
-              </span>
-            </motion.button>
-            <div className="flex items-center gap-4 justify-start">
-              {[
-                { icon: Github, url: 'https://github.com/phnxsahil' },
-                { icon: Twitter, url: 'https://x.com/theonlysahil1' },
-                { icon: Linkedin, url: 'https://www.linkedin.com/in/sahil-sharma-5a3715270/' },
-              ].map((social) => (
-                <motion.a
-                  key={social.url}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ y: -5, borderColor: 'var(--accent)', color: 'var(--accent)', boxShadow: '0 4px 12px rgba(200, 241, 53, 0.2)' }}
-                  className="bg-[var(--bg)] border border-[var(--border-hi)] text-[var(--muted2)] flex items-center justify-center transition-all duration-200"
-                  style={{
-                    width: '46px',
-                    height: '46px',
-                  }}
+            <motion.div variants={fadeVariants} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-6 w-full sm:w-auto">
+              <Magnetic strength={0.3}>
+                <motion.button 
+                  onClick={scrollToExplore} 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="btn-cta bg-[var(--accent)] text-black px-6 sm:px-8 py-4 h-[56px] transition-all duration-300 w-full sm:w-auto rounded-sm group"
+                  style={{ boxShadow: '0 8px 24px -8px var(--accent-dim)' }}
                 >
-                  <social.icon size={20} />
-                </motion.a>
-              ))}
-            </div>
-          </motion.div>
+                  <span className="relative z-10 flex items-center font-bold uppercase tracking-wider text-[11px]">
+                    Explore Archive
+                    <motion.div
+                      animate={{ y: [0, 3, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                      className="ml-2"
+                    >
+                      <ArrowRight size={16} className="rotate-90" />
+                    </motion.div>
+                  </span>
+                </motion.button>
+              </Magnetic>
+
+              <div className="flex items-center gap-4 justify-start">
+                {[
+                  { icon: Github, url: 'https://github.com/phnxsahil' },
+                  { icon: Twitter, url: 'https://x.com/theonlysahil1' },
+                  { icon: Linkedin, url: 'https://www.linkedin.com/in/sahil-sharma-5a3715270/' },
+                ].map((social, i) => (
+                  <Magnetic key={i} strength={0.4}>
+                    <motion.a
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.1, borderColor: 'var(--accent)', color: 'var(--accent)' }}
+                      className="bg-[var(--bg)] border border-[var(--border-hi)] text-[var(--muted2)] flex items-center justify-center transition-colors duration-200 rounded-sm"
+                      style={{ width: '48px', height: '48px' }}
+                    >
+                      <social.icon size={20} />
+                    </motion.a>
+                  </Magnetic>
+                ))}
+              </div>
+            </motion.div>
+
+          </div>
         </motion.div>
       </div>
 
-      <div className="mt-auto pt-16 border-t border-[var(--text)]">
+      <div className="mt-auto pt-16 border-t border-[var(--border-hi)] relative z-10 bg-[var(--bg)]">
         <Marquee />
       </div>
     </section>

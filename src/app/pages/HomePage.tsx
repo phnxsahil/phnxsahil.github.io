@@ -65,9 +65,8 @@ export default function HomePage() {
       <AnimatePresence mode="wait">
         {isLoaded && (
           <motion.main 
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
             id="main-content" 
             className="relative z-10"
           >

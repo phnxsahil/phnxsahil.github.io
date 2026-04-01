@@ -57,80 +57,117 @@ export function Navigation({ isDark, toggleDark }: NavigationProps) {
   };
 
   const navItems = [
-    { label: 'About', id: 'about', type: 'scroll' },
-    { label: 'Work', id: 'featured', type: 'scroll' },
-    { label: 'Philosophy', path: '/about-detail', type: 'link' },
-    { label: 'Contact', id: 'contact', type: 'scroll' }
+    { label: 'About', id: 'about', type: 'scroll' as const },
+    { label: 'Work', id: 'featured', type: 'scroll' as const },
+    { label: 'Philosophy', path: '/about-detail', type: 'link' as const },
+    { label: 'Contact', id: 'contact', type: 'scroll' as const }
   ];
+
+  const navContainerVariants = {
+    hidden: {},
+    visible: { 
+      transition: { 
+        staggerChildren: 0.1, 
+        delayChildren: 2.2 // wait for initial loader to almost finish
+      } 
+    }
+  };
+
+  const navItemVariants = {
+    hidden: { y: "100%", opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1, 
+      transition: { type: "spring", stiffness: 70, damping: 20, mass: 1 } 
+    }
+  };
 
   return (
     <>
       <motion.nav
         id="site-nav"
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5, ease: [0.2, 0.9, 0.22, 1] }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 2 }} // Fade the bar container in slowly 
         className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-[16px] border-b border-[var(--border)] backdrop-blur-[40px] transition-all duration-300"
         style={{
           background: isDark ? 'rgba(8, 8, 12, 0.88)' : 'rgba(252, 252, 248, 0.88)',
           boxShadow: isScrolled ? '0 4px 20px rgba(0, 0, 0, 0.08)' : 'none'
         }}
       >
-        {/* Logo - Minimalist SS. Branding */}
-        <Link
-          to="/"
-          className="relative group flex items-center font-black tracking-tighter text-[24px]"
-          style={{ 
-            fontFamily: 'var(--ff-sans)', 
-            textDecoration: 'none', 
-            color: 'var(--text)' 
-          }}
+        <motion.div 
+          className="flex items-center justify-between w-full"
+          variants={navContainerVariants}
+          initial="hidden"
+          animate="visible"
         >
-          SS.
-        </Link>
-
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex nav-links items-center gap-2">
-          {[
-            { label: 'Work', id: 'featured', type: 'scroll' },
-            { label: 'Why Me?', id: 'why-me', type: 'scroll' },
-            { label: 'Philosophy', path: '/about-detail', type: 'link' },
-            { label: 'Contact', id: 'contact', type: 'scroll' }
-          ].map((item) => (
-            <motion.div
-              key={item.label}
-              className="relative px-3 py-2 cursor-pointer group"
-              onClick={() => handleNavClick(item)}
-            >
-              <button
-                className="relative z-10 transition-all duration-300 opacity-60 group-hover:opacity-100"
-                style={{
-                  color: 'var(--text)',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontWeight: 600,
-                  fontSize: '11px',
-                  letterSpacing: '0.05em',
+          {/* Logo - Minimalist SS. Branding */}
+          <div className="overflow-hidden p-1">
+            <motion.div variants={navItemVariants}>
+              <Link
+                to="/"
+                className="relative group flex items-center font-black tracking-tighter text-[24px]"
+                style={{ 
+                  fontFamily: 'var(--ff-sans)', 
+                  textDecoration: 'none', 
+                  color: 'var(--text)' 
                 }}
               >
-                {item.label}
-              </button>
+                SS.
+              </Link>
             </motion.div>
-          ))}
+          </div>
 
-          <div className="h-5 w-px bg-[var(--border)] mx-4 opacity-50" />
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex nav-links items-center gap-2">
+            {([
+              { label: 'Work', id: 'featured', type: 'scroll' as const },
+              { label: 'Why Me?', id: 'why-me', type: 'scroll' as const },
+              { label: 'Philosophy', path: '/about-detail', type: 'link' as const },
+              { label: 'Contact', id: 'contact', type: 'scroll' as const }
+            ] as NavItem[]).map((item) => (
+              <div key={item.label} className="overflow-hidden p-1">
+                <motion.div
+                  variants={navItemVariants}
+                  className="relative px-3 py-2 cursor-pointer group"
+                  onClick={() => handleNavClick(item)}
+                >
+                  <button
+                    className="relative z-10 transition-all duration-300 opacity-60 group-hover:opacity-100"
+                    style={{
+                      color: 'var(--text)',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontWeight: 600,
+                      fontSize: '11px',
+                      letterSpacing: '0.05em',
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                </motion.div>
+              </div>
+            ))}
 
-          <button
-            onClick={toggleDark}
-            className="p-2 text-[var(--muted2)] hover:text-[var(--text)] transition-colors"
-            aria-label="Toggle theme"
-          >
-            {isDark ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
-        </div>
+            <div className="h-5 w-px bg-[var(--border)] mx-4 opacity-50 overflow-hidden">
+               <motion.div variants={navItemVariants} className="w-full h-full bg-[var(--text)]" />
+            </div>
 
-
+            <div className="overflow-hidden p-1">
+              <motion.button
+                variants={navItemVariants}
+                onClick={toggleDark}
+                whileHover={{ scale: 1.1, rotate: 10 }}
+                transition={{ type: "spring", stiffness: 300, damping: 10 }}
+                className="p-2 text-[var(--muted2)] hover:text-[var(--text)] transition-colors inline-block"
+                aria-label="Toggle theme"
+              >
+                {isDark ? <Sun size={20} /> : <Moon size={20} />}
+              </motion.button>
+            </div>
+          </div>
+        </motion.div>
 
         {/* Mobile Menu Toggle */}
         <div className="flex md:hidden items-center gap-2">
@@ -189,8 +226,8 @@ export function Navigation({ isDark, toggleDark }: NavigationProps) {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4 }}
-                onClick={() => handleNavClick({ type: 'scroll', id: 'contact' })}
-                className="w-full bg-[var(--text)] text-[var(--bg)] font-black py-5 px-8 mt-12 text-center uppercase text-[11px] tracking-[0.2em] rounded-full shadow-lg"
+                onClick={() => handleNavClick({ type: 'scroll' as const, id: 'contact' })}
+                className="w-full bg-[var(--text)] text-[var(--bg)] font-black py-5 px-8 mt-12 text-center uppercase text-[11px] tracking-[0.2em] rounded-full shadow-lg hover:scale-105 transition-transform"
               >
                 Inquiry
               </motion.button>

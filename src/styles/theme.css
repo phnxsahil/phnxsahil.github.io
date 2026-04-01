@@ -404,6 +404,58 @@ html:not(.dark) .wm-cabinet {
   transform: translateY(-4px);
 }
 
+/* Mat Voyce Brutalist Split Typography */
+.voyce-text-top {
+  position: absolute;
+  top: clamp(40px, 8vh, 120px);
+  left: -2vw;
+  font-family: var(--ff-cabinet);
+  font-size: clamp(120px, 24vw, 500px);
+  font-weight: 900;
+  line-height: 0.8;
+  color: var(--accent);
+  opacity: 0.7; /* Reduced from 0.9 */
+  z-index: 0;
+  pointer-events: none;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.voyce-text-bottom {
+  position: absolute;
+  bottom: clamp(120px, 20vh, 240px);
+  right: -2vw;
+  font-family: var(--ff-cabinet);
+  font-size: clamp(120px, 24vw, 500px);
+  font-weight: 900;
+  line-height: 0.8;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--accent); /* Thinner stroke */
+  opacity: 0.6; /* Reduced from 0.8 */
+  z-index: 0;
+  pointer-events: none;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.voyce-center-card {
+  position: relative;
+  z-index: 10;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 1px solid var(--border-hi);
+  padding: clamp(32px, 5vw, 56px);
+  max-width: 640px;
+  box-shadow: 0 30px 60px -20px rgba(0,0,0,0.5); /* Lighter shadow */
+  backdrop-filter: blur(12px); /* Optimized from 20px */
+  transform: rotate(-2deg);
+  transition: transform 0.6s var(--ease-premium), box-shadow 0.6s ease;
+}
+
+.voyce-center-card:hover {
+  transform: rotate(0deg) scale(1.02);
+  box-shadow: 0 50px 100px -20px rgba(0,0,0,0.6), 0 0 0 1px var(--accent-dim);
+}
+
 /* Skip-to-content — accessible but hidden until focused */
 .skip-link {
   position: absolute;

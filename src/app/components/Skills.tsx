@@ -1,5 +1,4 @@
-import { motion } from 'motion/react';
-import { useInView } from './useInView';
+import { motion, type Variants } from 'motion/react';
 
 type Capability = {
   title: string;
@@ -47,46 +46,74 @@ const capabilities: Capability[] = [
 ];
 
 export function Skills() {
-  const { ref, isInView } = useInView();
+  const containerVariants: Variants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } }
+  };
+
+  const cardVariants: Variants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: { 
+      opacity: 1, 
+      x: 0, 
+      transition: { type: "spring", stiffness: 50, damping: 20, mass: 1 } 
+    }
+  };
+
+  const maskVariants: Variants = {
+    hidden: { y: "120%", rotate: 2 },
+    visible: { 
+      y: "0%", 
+      rotate: 0,
+      transition: { type: "spring", stiffness: 60, damping: 20, mass: 1 } 
+    }
+  };
+
+  const lineVariants: Variants = {
+    hidden: { scaleX: 0 },
+    visible: { scaleX: 1, transition: { type: "spring", stiffness: 50, damping: 20 } }
+  };
 
   return (
-    <section id="stack" ref={ref} className="border-y border-[var(--border)] bg-[var(--bg)] px-6 py-24 md:px-12">
-      <div className="mx-auto max-w-[1280px]">
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.62 }}
-          className="mb-10"
-        >
-          <div className="flex items-center gap-[10px] mb-5" style={{ color: 'var(--accent)' }}>
-            <div style={{ width: '20px', height: '1px', background: 'var(--accent)' }} />
-            <span className="eyebrow">
+    <section id="stack" className="border-y border-[var(--border)] bg-[var(--bg)] px-6 py-24 md:px-12">
+      <motion.div 
+        className="mx-auto max-w-[1280px]"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-20%" }}
+        variants={containerVariants}
+      >
+        <div className="mb-10 flex flex-col gap-5">
+          <div className="flex items-center gap-[10px] overflow-hidden p-1" style={{ color: 'var(--accent)' }}>
+            <motion.div variants={lineVariants} className="origin-left" style={{ width: '20px', height: '1px', background: 'var(--accent)' }} />
+            <motion.span variants={maskVariants} className="eyebrow inline-block">
               Capability Depth
-            </span>
+            </motion.span>
           </div>
-          <h2
-            className="section-title"
-            style={{
-              lineHeight: '0.9',
-              textTransform: 'uppercase',
-            }}
-          >
-            How I Operate
-          </h2>
-        </motion.div>
+          <div className="overflow-hidden p-2">
+            <motion.h2
+              variants={maskVariants}
+              className="section-title"
+              style={{
+                lineHeight: '0.9',
+                textTransform: 'uppercase',
+              }}
+            >
+              How I Operate
+            </motion.h2>
+          </div>
+        </div>
  
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
-          {capabilities.map((item, index) => (
+          {capabilities.map((item) => (
             <motion.article
               key={item.title}
-              initial={{ opacity: 0, y: 24 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: index * 0.08, duration: 0.62 }}
-              className="surface rounded-sm p-6 md:p-8 border border-[var(--border)]"
+              variants={cardVariants}
+              className="surface rounded-sm p-6 md:p-8 border border-[var(--border)] group hover:border-[var(--accent)] transition-colors"
             >
-              <h3 className="build-name text-[var(--text)] uppercase" style={{ fontSize: '20px' }}>{item.title}</h3>
+              <h3 className="build-name text-[var(--text)] uppercase transition-colors group-hover:text-[var(--accent)]" style={{ fontSize: '20px' }}>{item.title}</h3>
               <p className="eyebrow mt-2" style={{ color: 'var(--muted2)', fontSize: '9px' }}>{item.scope}</p>
-              <div className="h-px w-full bg-[var(--border)] my-6" />
+              <div className="origin-left h-px w-full bg-[var(--border)] my-6 transition-transform duration-700 group-hover:scale-x-105" />
               <ul className="flex flex-col gap-3 info-list">
                 {item.evidence.map((line) => (
                   <li key={line} className="flex gap-3">
@@ -98,7 +125,7 @@ export function Skills() {
             </motion.article>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, useLocation } from 'react-router';
+import { AnimatePresence } from 'motion/react';
 import { Navigation } from './components/Navigation';
 import { Footer } from './components/Footer';
+import { PageTransition } from './components/PageTransition';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
@@ -19,10 +21,24 @@ function RouteEffects() {
   }, []);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [location.pathname]);
 
   return null;
+}
+
+function AnimatedRoutes() {
+  const location = useLocation();
+  
+  return (
+    <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo(0, 0)}>
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransition key="home"><HomePage /></PageTransition>} />
+        <Route path="/about-detail" element={<PageTransition key="about"><AboutPage /></PageTransition>} />
+        <Route path="/project/:id" element={<PageTransition key="project"><ProjectDetailPage /></PageTransition>} />
+      </Routes>
+    </AnimatePresence>
+  );
 }
 
 export default function App() {
@@ -48,7 +64,7 @@ export default function App() {
     <HashRouter>
       <RouteEffects />
       <div
-        className="min-h-screen transition-colors duration-300 relative"
+        className="min-h-screen transition-colors duration-300 relative flex flex-col"
         style={{
           background: 'var(--bg)',
           color: 'var(--text)',
@@ -60,12 +76,9 @@ export default function App() {
         
         <Navigation isDark={isDark} toggleDark={() => setIsDark(!isDark)} />
         
-        <Routes>
-           <Route path="/" element={<HomePage />} />
-           <Route path="/about-detail" element={<AboutPage />} />
-           <Route path="/project/:id" element={<ProjectDetailPage />} />
-
-        </Routes>
+        <main className="flex-1 min-h-[105vh] w-full relative flex flex-col">
+          <AnimatedRoutes />
+        </main>
 
         <Footer />
       </div>

@@ -16,7 +16,7 @@ export function Marquee() {
 
   return (
     <div 
-      className="w-full py-4 overflow-hidden flex whitespace-nowrap border-y border-[var(--border)] group cursor-default"
+      className="w-full py-4 overflow-hidden flex whitespace-nowrap border-y border-[var(--border)] group cursor-default bg-[var(--surface)]"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -24,24 +24,38 @@ export function Marquee() {
         className="flex items-center"
         animate={{
           x: ["0%", "-50%"],
+          skewX: isHovered ? -2 : 0,
         }}
         transition={{
-          duration: isHovered ? 80 : 40,
-          repeat: Infinity,
-          ease: "linear",
+          x: {
+            duration: isHovered ? 120 : 60,
+            repeat: Infinity,
+            ease: "linear",
+          },
+          skewX: {
+            type: "spring",
+            stiffness: 50,
+            damping: 20
+          }
         }}
         style={{ minWidth: '200%' }}
       >
         {scrollWords.map((word, i) => (
-          <div key={i} className="flex items-center gap-10 shrink-0">
+          <div key={i} className="flex items-center gap-12 shrink-0">
             <motion.span 
-              className="font-medium text-[10px] tracking-[0.2em] uppercase transition-colors duration-500"
-              animate={{ color: isHovered ? "var(--accent)" : "var(--muted2)" }}
-              style={{ paddingRight: '12px' }}
+              className="font-bold text-[9px] tracking-[0.25em] uppercase transition-all duration-700 font-mono"
+              animate={{ 
+                color: isHovered ? "var(--accent)" : "var(--muted2)",
+                opacity: isHovered ? 1 : 0.4 
+              }}
+              style={{ paddingRight: '16px' }}
             >
               {word}
             </motion.span>
-            <span className="h-[1px] w-8 bg-[var(--border)] shrink-0 opacity-40" />
+            <div className="flex items-center gap-2 opacity-20 group-hover:opacity-100 transition-opacity duration-700">
+               <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
+               <div className="h-[1px] w-12 bg-[var(--border)]" />
+            </div>
           </div>
         ))}
       </motion.div>
