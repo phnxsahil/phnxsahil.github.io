@@ -5,47 +5,70 @@ interface PageTransitionProps {
 }
 
 export function PageTransition({ children }: PageTransitionProps) {
+  const transition = { duration: 0.8, ease: [0.76, 0, 0.24, 1] };
+
   return (
     <>
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0, transition: { duration: 0.4, delay: 0.6 } }} // fade out old page beneath the wipe
-        className="w-full"
+        animate={{ opacity: 1, transition: { delay: 0.8, duration: 0.4 } }}
+        exit={{ opacity: 0, transition: { duration: 0.2 } }}
+        className="w-full relative z-0"
       >
         {children}
       </motion.div>
 
-      {/* The Entry/Exit Wipe Overlay */}
-      <motion.div
-        initial={{ top: 0, height: "100vh" }}
-        animate={{ height: 0 }}
-        exit={{ top: 0, height: "100vh" }}
-        transition={{ duration: 1.2, ease: [0.85, 0, 0.15, 1] }} // Slower, heavier Uncommon Studio feel
-        className="fixed inset-x-0 bg-[var(--bg)] z-[9999] flex flex-col items-center justify-center overflow-hidden pointer-events-none origin-top border-b-2 border-[var(--accent)]"
-      >
+      <div className="fixed inset-0 z-[9999] pointer-events-none flex flex-col overflow-hidden">
+        
+        {/* =========================================
+            TOP PANEL — SAHIL 
+            ========================================= */}
         <motion.div 
-          initial={{ opacity: 1 }}
-          animate={{ opacity: 0 }}
-          exit={{ opacity: 1 }}
-          transition={{ duration: 0.2 }}
-          className="flex flex-col items-center justify-center absolute inset-0"
+           initial={{ y: 0 }}
+           animate={{ y: "-100%", transition: { ...transition, delay: 0.5 } }}
+           exit={{ y: 0, transition: { ...transition } }}
+           className="absolute top-0 left-0 w-full h-1/2 bg-[var(--bg)] flex flex-col items-center justify-end overflow-hidden border-b border-[var(--border)]"
         >
-          <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-[var(--muted2)] mb-4">
-            Establishing Link
-          </div>
-          <div className="font-bold text-[clamp(44px,8vw,80px)] italic text-[var(--text)] leading-none tracking-tighter" style={{ fontFamily: 'var(--ff-cabinet)' }}>
-            S S.
-          </div>
-          <div className="h-[2px] w-[120px] bg-[var(--border-hi)] mt-6 relative overflow-hidden">
-             <motion.div 
-               animate={{ x: ["-100%", "100%"] }}
-               transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-               className="absolute inset-y-0 left-0 w-[40px] bg-[var(--accent)]"
-             />
-          </div>
+           <div 
+             className="text-[var(--accent)] mb-[-0.12em]"
+             style={{
+               fontFamily: 'var(--ff-cabinet), sans-serif',
+               fontSize: 'clamp(64px, 14vw, 280px)',
+               fontWeight: 900,
+               fontStyle: 'italic',
+               lineHeight: 1
+             }}
+           >
+             SAHIL
+           </div>
         </motion.div>
-      </motion.div>
+
+        {/* =========================================
+            BOTTOM PANEL — SHARMA 
+            ========================================= */}
+        <motion.div 
+           initial={{ y: 0 }}
+           animate={{ y: "100%", transition: { ...transition, delay: 0.5 } }}
+           exit={{ y: 0, transition: { ...transition } }}
+           className="absolute bottom-0 left-0 w-full h-1/2 bg-[var(--bg)] flex flex-col items-center justify-start overflow-hidden border-t border-[var(--border)]"
+        >
+           <div 
+             className="mt-[-0.12em]"
+             style={{
+               fontFamily: 'var(--ff-cabinet), sans-serif',
+               fontSize: 'clamp(64px, 14vw, 280px)',
+               fontWeight: 900,
+               color: 'transparent',
+               WebkitTextStroke: '2px var(--accent)',
+               fontStyle: 'italic',
+               lineHeight: 1
+             }}
+           >
+             SHARMA
+           </div>
+        </motion.div>
+
+      </div>
     </>
   );
 }

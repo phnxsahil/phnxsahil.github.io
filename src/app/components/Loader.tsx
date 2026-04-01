@@ -26,6 +26,9 @@ export function Loader({ onComplete }: LoaderProps) {
           // Beat 2: Start splitting (1400ms total pause)
           setTimeout(() => {
             setPhase('splitting');
+            // Trigger audio start event
+            window.dispatchEvent(new CustomEvent('portfolio-start'));
+            
             // Beat 3: Signal done (800ms after split starts)
             setTimeout(onComplete, 900);
           }, 1600);

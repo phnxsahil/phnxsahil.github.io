@@ -36,11 +36,11 @@
   --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
   --shadow-glow: 0 0 20px rgba(255,255,255,0.03);
 
-  /* Shared Animation tokens */
-  --ease-spring: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-enter: cubic-bezier(0.2, 0.9, 0.22, 1);
-  --ease-smooth: cubic-bezier(0.3, 0, 0.2, 1);
-  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Shared Animation tokens — shifted to longer, liquid glides */
+  --ease-spring: cubic-bezier(0.2, 0, 0, 1);
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-premium: cubic-bezier(0.83, 0, 0.17, 1);
   --dur-fast: 0.16s;
   --dur-base: 0.32s;
   --hero-vignette: radial-gradient(circle at 35% 50%, rgba(0, 0, 0, 0.85) 0%, transparent 65%);
@@ -59,41 +59,41 @@
   --ff-cabinet: 'Cabinet Grotesk', sans-serif;
 }
 
-/* Light Mode: WARM OFF-WHITE PAPER — purple accent, darker text */
+/* Light Mode: SOFT CREAM — Refined gallery aesthetic */
 html:not(.dark) {
-  --bg:       #f4f1ea;   /* warm cream paper */
-  --bg2:      #edeae2;
-  --surface:  #ddd9d0;   /* 10% darker — cards now distinguishable */
-  --surface2: #d4d0c7;   /* clearly elevated on hover */
-  --border:    rgba(0,0,0,0.12);   /* was 0.07 — now visible */
-  --border-hi: rgba(0,0,0,0.22);   /* was 0.14 — now readable */
-  --border-glow: rgba(0,0,0,0.06);
-  --text:   #1a1a1a;     /* near-black for strong hierarchy */
-  --muted:  #6f6a60;     /* was #b0ada6 — now readable */
-  --muted2: #35322c;     /* was #706d66 — now passes WCAG AA */
-  --accent:        #7c3aed;   /* vibrant purple — premium, high-contrast */
-  --accent-dim:    rgba(124,58,237,0.09);
-  --accent-border: rgba(124,58,237,0.30);
-  --glow: rgba(0,0,0,0.02);
-  --hero-vignette: radial-gradient(circle at 35% 50%, rgba(255, 255, 255, 0.55) 0%, transparent 65%);
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-  --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08);
-  --shadow-lg: 0 25px 50px -12px rgba(0,0,0,0.1);
+  --bg:       #FDFDFA;   /* Ultra polished soft cream */
+  --bg2:      #F7F7F2;   /* Subtle depth */
+  --surface:  #F4F4EE;   /* Card surface */
+  --surface2: #EBEBE5;   /* Hover elevation */
+  --border:    rgba(0,0,0,0.06);   /* Barely there architectural lines */
+  --border-hi: rgba(0,0,0,0.12);   
+  --border-glow: rgba(0,0,0,0.03);
+  --text:   #0a0a0a;     /* Pure clean black */
+  --muted:  #888888;     
+  --muted2: #444444;     
+  --accent:        #000000;   /* Black accents in light mode for extreme class */
+  --accent-dim:    rgba(0,0,0,0.05);
+  --accent-border: rgba(0,0,0,0.15);
+  --glow: rgba(0,0,0,0.01);
+  --hero-vignette: radial-gradient(circle at 35% 50%, rgba(255, 255, 255, 0.4) 0%, transparent 65%);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.02);
+  --shadow-md: 0 12px 24px -4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 32px 64px -12px rgba(0,0,0,0.06);
 }
 
 /* Ticker stays BLACK in light mode — it's the contrast anchor */
 html:not(.dark) .ticker-wrap,
 html:not(.dark) .marquee-wrap {
-  background: #0a0a0f !important;
+  background: #000000 !important;
 }
 html:not(.dark) .ticker-item,
 html:not(.dark) .marquee-track span {
-  color: #c8f135 !important;
+  color: #c8f135 !important; /* Back to acid yellow/green pop on black ticker */
 }
 
 /* Nav scrolled in light mode */
 html:not(.dark) nav.scrolled {
-  background: rgba(244, 241, 234, 0.93) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
 }
 
 @theme inline {
@@ -118,7 +118,6 @@ html:not(.dark) nav.scrolled {
     background: var(--bg);
     color: var(--text);
     overflow-x: hidden;
-    cursor: auto;
     font-size: 16px; /* Increased from 15px */
     line-height: 1.8; /* Increased for better flow */
   }

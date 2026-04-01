@@ -20,6 +20,7 @@ export interface Project {
   techPerspective?: string;
   uxDeepDive?: string;
   techDeepDive?: string;
+  status: 'active' | 'waitlist' | 'maintenance' | 'crashed' | 'soon';
 }
 
 export const projects: Project[] = [
@@ -27,7 +28,7 @@ export const projects: Project[] = [
     id: 'miryn-ai',
     name: 'Miryn AI',
     label: 'AI context-companion / Identity Engine',
-    year: '2025',
+    year: '2026',
     featured: true,
     category: 'AI',
     url: 'https://miryn-ai.vercel.app',
@@ -52,13 +53,14 @@ export const projects: Project[] = [
       'Used a reflection pipeline to summarize entities and emotions automatically.'
     ],
     challenge: 'The primary challenge was preventing "context drift," where the AI loses its specific persona over long chat histories.',
-    architecture: 'Miryn uses a decoupled architecture where a FastAPI backend orchestrates semantic search and identity management, while a Next.js frontend handles the reflective interaction design.'
+    architecture: 'Miryn uses a decoupled architecture where a FastAPI backend orchestrates semantic search and identity management, while a Next.js frontend handles the reflective interaction design.',
+    status: 'active'
   },
   {
     id: 'fltrd',
     name: 'FLTRD',
     label: 'stop doomscrolling. start living. / Product design',
-    year: '2025',
+    year: '2026',
     featured: true,
     category: 'Social',
     url: 'https://fl-trd.vercel.app',
@@ -83,7 +85,8 @@ export const projects: Project[] = [
       'Implemented a time-windowed digest to protect cognitive focus.'
     ],
     challenge: 'Winning back attention from platforms designed to steal it required a UI that was both extremely premium and fundamentally un-addictive.',
-    architecture: 'Full-stack TypeScript application leveraging Vercel Edge Functions for real-time personalization and intent-based sorting.'
+    architecture: 'Full-stack TypeScript application leveraging Vercel Edge Functions for real-time personalization and intent-based sorting.',
+    status: 'waitlist'
   },
   {
     id: 'stash',
@@ -109,13 +112,14 @@ export const projects: Project[] = [
       'Used server-side extraction to bypass browser-based player restrictions.',
       'Implemented async task queues to handle song identification spikes.',
       'Prioritized Spotify URI accuracy over raw extraction speed.'
-    ]
+    ],
+    status: 'active'
   },
   {
     id: 'bookie',
     name: 'Bookie',
     label: 'Bake your Bookie / Knowledge curation',
-    year: '2024',
+    year: '2026',
     featured: false,
     category: 'Tooling',
     url: 'https://bookieapp.vercel.app',
@@ -135,7 +139,8 @@ export const projects: Project[] = [
       'Built a custom proxy layer to solve regional DNS hijacking issues.',
       'Used edge workers to prevent scraping blocks and improve reliability.',
       'Designed a category-first UX to encourage active link classification.'
-    ]
+    ],
+    status: 'maintenance'
   },
   {
     id: 'chai-paani',
@@ -161,6 +166,7 @@ export const projects: Project[] = [
       'Moved math logic to SQL to prevent frontend calculation mismatches.',
       'Leveraged Supabase RLS to ensure group privacy and security.',
       'Used Zustand for lightweight, reactive state management.'
-    ]
+    ],
+    status: 'crashed'
   }
 ];

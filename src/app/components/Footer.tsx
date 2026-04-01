@@ -1,131 +1,118 @@
 import { motion, useScroll, useTransform } from 'motion/react';
-import { Mail, Twitter, Github, Linkedin, ArrowUp } from 'lucide-react';
-import { useRef } from 'react';
+import { Mail, Twitter, Github, Linkedin, ArrowUp, Copy, Check } from 'lucide-react';
+import { useRef, useState } from 'react';
 
 export function Footer() {
   const containerRef = useRef<HTMLElement>(null);
+  const [copied, setCopied] = useState(false);
+  const email = "worksahilsharma@gmail.com";
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end end"]
   });
 
-  const bgY = useTransform(scrollYProgress, [0, 1], ["-30%", "10%"]);
+  const textX = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
+
+  const copyEmail = () => {
+    navigator.clipboard.writeText(email);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <footer ref={containerRef} className="relative z-[2] mt-32 border-t border-[var(--border)] bg-[var(--bg)] pt-24 pb-12 overflow-hidden">
+    <footer id="contact" ref={containerRef} className="relative z-[2] mt-48 bg-[var(--bg)] pt-40 pb-12 overflow-hidden border-t border-[var(--border)]">
       
-      {/* Scrolling Marquee Watermark — sits BEHIND the "Stay in Touch" content */}
-      <motion.div 
-        style={{ y: bgY }}
-        className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden"
-      >
-        <motion.div
-          className="flex items-center whitespace-nowrap"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ x: { duration: 30, repeat: Infinity, ease: "linear" } }}
-          style={{ minWidth: '200%', opacity: 0.12 }}
+      {/* Massive Background Marquee - Matt Voyce Style */}
+      <div className="absolute top-0 left-0 w-full overflow-hidden pointer-events-none select-none opacity-[0.03] dark:opacity-[0.05]">
+        <motion.div 
+          style={{ x: textX }}
+          className="whitespace-nowrap font-black text-[25vw] leading-none uppercase italic tracking-tighter"
         >
-          {Array.from({ length: 12 }).map((_, i) => (
-            <span 
-              key={i} 
-              className="flex items-center gap-6 shrink-0 px-6"
-              style={{
-                fontFamily: 'var(--ff-cabinet), sans-serif',
-                fontSize: 'clamp(80px, 14vw, 200px)',
-                fontWeight: 900,
-                fontStyle: 'italic',
-                textTransform: 'uppercase',
-                lineHeight: 1,
-                color: i % 2 === 0 ? 'var(--accent)' : 'transparent',
-                WebkitTextStroke: i % 2 === 0 ? 'none' : '2px var(--accent)',
-              }}
-            >
-              SS. ARCHIVE
-              <span 
-                className="inline-block mx-4"
-                style={{ fontSize: '0.25em', verticalAlign: 'middle', opacity: 0.5 }}
-              >
-                ◆
-              </span>
-            </span>
-          ))}
+          LET'S BUILD SOMETHING UNIQUE — LET'S BUILD SOMETHING UNIQUE — 
         </motion.div>
-      </motion.div>
+      </div>
 
-      {/* Footer Content — sits ON TOP of the watermark */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
-        <div className="mb-24 grid grid-cols-1 gap-16 md:grid-cols-2">
-          <div className="flex flex-col gap-8">
-            <h2 className="section-title text-[clamp(40px,5vw,72px)] leading-none text-[var(--accent)]">
-              STAY IN <br/>TOUCH.
-            </h2>
-            <div className="flex flex-col gap-4">
-               <p className="body-text max-w-[32ch] text-[16px] opacity-70 leading-relaxed">
-                 Always open to technical discovery sessions, high-integrity builds, and sonic exploration.
-               </p>
-            </div>
-            
-            <div className="flex items-center gap-4">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 flex flex-col gap-32">
+        
+        {/* Main CTA: The Email Unroll */}
+        <div className="flex flex-col items-start gap-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex items-center gap-4"
+          >
+            <div className="w-8 h-px bg-[var(--accent)]" />
+            <span className="eyebrow tracking-[0.4em]">Available for 2026 Inquiry</span>
+          </motion.div>
+
+          <div className="relative group cursor-pointer" onClick={copyEmail}>
+             <h2 className="text-[clamp(32px,8vw,110px)] font-black tracking-tighter leading-[0.9] break-all uppercase">
+               {email.split('@')[0]}<span className="text-[var(--accent)] opacity-40">@</span>{email.split('@')[1]}
+             </h2>
+             
+             {/* Copy Feedback Overlay */}
+             <motion.div 
+               initial={false}
+               animate={{ opacity: copied ? 1 : 0, y: copied ? -20 : 0 }}
+               className="absolute -top-12 left-0 bg-[var(--accent)] text-black px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-sm"
+             >
+               {copied ? "Copied to clipboard" : ""}
+             </motion.div>
+
+             <div className="mt-6 flex items-center gap-4 text-[var(--muted)] group-hover:text-[var(--accent)] transition-colors">
+                {copied ? <Check size={20} /> : <Copy size={20} />}
+                <span className="font-mono text-[11px] uppercase tracking-[0.2em]">Click to copy address</span>
+             </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar: Simplified & Elegant */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-end pt-20 border-t border-[var(--border)]">
+          <div className="flex flex-col gap-12">
+            <div className="flex items-center gap-8">
               {[
                 { icon: Github, href: 'https://github.com/phnxsahil' },
                 { icon: Twitter, href: 'https://x.com/theonlysahil1' },
                 { icon: Linkedin, href: 'https://www.linkedin.com/in/sahil-sharma-5a3715270/' },
-                { icon: Mail, href: 'mailto:worksahilsharma@gmail.com' }
               ].map((social, i) => (
-                <motion.a
+                <a
                   key={i}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ y: -8, scale: 1.15, rotate: i % 2 === 0 ? 5 : -5 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                  className="p-3 border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--accent)] hover:text-[var(--bg)] hover:border-[var(--accent)] rounded-sm text-[var(--muted2)] transition-colors shadow-sm"
+                  className="text-[var(--muted)] hover:text-[var(--accent)] transition-all transform hover:-translate-y-1"
                 >
-                  <social.icon size={18} />
-                </motion.a>
+                  <social.icon size={22} />
+                </a>
               ))}
             </div>
-          </div>
 
-          <div className="flex flex-col justify-between items-start gap-10 md:items-end">
-            <button 
-              onClick={scrollToTop}
-              className="group flex flex-col items-center gap-3 text-[var(--muted2)] hover:text-[var(--accent)] transition-colors uppercase font-mono text-[9px] tracking-[0.3em]"
-            >
-              <div className="w-12 h-12 rounded-full border border-[var(--border)] flex items-center justify-center group-hover:border-[var(--accent)] transition-colors">
-                <ArrowUp size={16} className="group-hover:-translate-y-1 transition-transform" />
-              </div>
-              Back to Top
-            </button>
-
-            <div className="hidden md:flex flex-col items-end gap-2 text-right">
-               <span className="eyebrow text-[9px]">Status</span>
-               <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse shadow-[0_0_8px_var(--accent)]" />
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--text)]">Available for 2026 builds</span>
-               </div>
+            <div className="flex flex-col gap-3 font-mono text-[10px] uppercase tracking-[0.2em] opacity-40">
+               <span>&copy; 2026 Sahil Sharma — ARCHIVE V4.2</span>
+               <span>Built with React & Intent // Dehradun, IN</span>
             </div>
           </div>
-        </div>
 
-        <div className="mt-auto flex flex-col gap-8 border-t border-[var(--border-hi)] pt-12 md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-col items-start gap-4 text-[10px] font-mono uppercase tracking-[0.2em] opacity-40 md:flex-row md:items-center md:gap-6">
-             <span>&copy; 2026 Sahil Sharma</span>
-             <div className="hidden md:block w-px h-3 bg-[var(--border-hi)]" />
-             <span>Designed & Built with Intent</span>
-          </div>
-          
-          <div className="flex flex-col items-start gap-4 text-[10px] font-mono uppercase tracking-[0.2em] opacity-40 md:flex-row md:items-center md:gap-6">
-             <span>Digital Archive v4.2</span>
-             <div className="hidden md:block w-px h-3 bg-[var(--border-hi)]" />
-             <span>Dehradun</span>
+          <div className="flex flex-col items-start md:items-end gap-10">
+            <button 
+              onClick={scrollToTop}
+              className="flex items-center gap-4 text-[var(--muted2)] hover:text-[var(--accent)] transition-all group font-mono text-[10px] uppercase tracking-[0.3em]"
+            >
+              Back to Surface
+              <div className="w-10 h-10 rounded-full border border-[var(--border)] flex items-center justify-center group-hover:bg-[var(--accent)] group-hover:text-black group-hover:border-[var(--accent)] transition-all">
+                <ArrowUp size={16} />
+              </div>
+            </button>
           </div>
         </div>
       </div>
     </footer>
   );
 }
+

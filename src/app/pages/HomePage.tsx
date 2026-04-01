@@ -4,16 +4,24 @@ import { useLocation, useNavigate } from 'react-router';
 import { Hero } from '../components/Hero';
 import { Ticker } from '../components/Ticker';
 import { About } from '../components/About';
+import { PersonalStory } from '../components/PersonalStory';
 import { FeaturedProjects } from '../components/FeaturedProjects';
 import { AllProjects } from '../components/AllProjects';
 import { Skills } from '../components/Skills';
 import { Loader } from '../components/Loader';
 import { Manifesto } from '../components/Manifesto';
 import { WhyMe } from '../components/WhyMe';
+import { ProductEngineer } from '../components/ProductEngineer';
 export default function HomePage() {
-  const [isLoaded, setIsLoaded] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  
+  // Back to always showing loader on initial component mount
+  const [isLoaded, setIsLoaded] = useState(!!location.state);
+
+  const handleLoaderComplete = () => {
+    setIsLoaded(true);
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -29,14 +37,14 @@ export default function HomePage() {
   };
 
   const sectionVariants = {
-    hidden: { opacity: 0, y: 30, filter: 'blur(10px)' },
+    hidden: { opacity: 0, y: 40, filter: 'blur(10px)' },
     visible: { 
       opacity: 1, 
       y: 0,
       filter: 'blur(0px)',
       transition: { 
-        duration: 1.2, 
-        ease: [0.22, 1, 0.36, 1] as any // ease-premium quintic
+        duration: 1.4, 
+        ease: [0.2, 0, 0, 1] as any // soft liquid exit
       }
     }
   };
@@ -60,7 +68,7 @@ export default function HomePage() {
 
   return (
     <>
-      <Loader onComplete={() => setIsLoaded(true)} />
+      {!isLoaded && <Loader onComplete={handleLoaderComplete} />}
       
       <AnimatePresence mode="wait">
         {isLoaded && (
@@ -79,6 +87,10 @@ export default function HomePage() {
             </motion.div>
 
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }} variants={sectionVariants}>
+              <PersonalStory />
+            </motion.div>
+
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }} variants={sectionVariants}>
               <WhyMe />
             </motion.div>
 
@@ -86,7 +98,9 @@ export default function HomePage() {
               <Manifesto />
             </motion.div>
 
-
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }} variants={sectionVariants}>
+              <ProductEngineer />
+            </motion.div>
 
             <Ticker />
 
