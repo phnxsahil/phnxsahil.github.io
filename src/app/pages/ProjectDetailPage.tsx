@@ -4,6 +4,7 @@ import { ArrowLeft, ExternalLink, Github, Code2, Cpu, BarChart3, ChevronRight } 
 import { projects } from '../data/projects';
 import { useEffect } from 'react';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { SystemAnatomy } from '../components/SystemAnatomy';
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
@@ -152,23 +153,30 @@ export default function ProjectDetailPage() {
                  <h2 className="eyebrow text-[var(--text)] text-[14px]">Technical Architecture // Logic Layer</h2>
               </motion.div>
             </div>
-            <motion.div variants={fadeVariants}>
-              <p className="body-text text-[18px] mb-8 leading-relaxed opacity-70">
-                {project.techDeepDive || project.architecture || "Built on a modern stack prioritized for reliability and performance. The architecture utilizes distributed systems where necessary and adheres to the principles of high-performance product engineering."}
-              </p>
-            </motion.div>
-            <div className="grid grid-cols-2 gap-4 mt-8">
-               {project.stack.map((tech, idx) => (
-                 <motion.div 
-                   key={tech} 
-                   variants={cardVariants}
-                   custom={idx}
-                   className="p-4 border border-[var(--border)] bg-[var(--surface)] rounded-sm flex items-center gap-3 group hover:border-[var(--accent)] transition-colors"
-                 >
-                    <ChevronRight size={14} className="text-[var(--accent)] group-hover:translate-x-1 transition-transform" />
-                    <span className="eyebrow text-[10px] tracking-widest text-[var(--text)]">{tech}</span>
-                 </motion.div>
-               ))}
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <motion.div variants={fadeVariants}>
+                <p className="body-text text-[18px] mb-8 leading-relaxed opacity-70">
+                  {project.techDeepDive || project.architecture || "Built on a modern stack prioritized for reliability and performance. The architecture utilizes distributed systems where necessary and adheres to the principles of high-performance product engineering."}
+                </p>
+                <div className="grid grid-cols-2 gap-4">
+                  {project.stack.slice(0, 4).map((tech, idx) => (
+                    <motion.div 
+                      key={tech} 
+                      variants={cardVariants}
+                      custom={idx}
+                      className="p-4 border border-[var(--border)] bg-[var(--surface)] rounded-sm flex items-center gap-3 group hover:border-[var(--accent)] transition-colors"
+                    >
+                        <ChevronRight size={14} className="text-[var(--accent)] group-hover:translate-x-1 transition-transform" />
+                        <span className="eyebrow text-[10px] tracking-widest text-[var(--text)]">{tech}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+
+              <motion.div variants={fadeVariants} className="w-full">
+                <SystemAnatomy stack={project.stack} />
+              </motion.div>
             </div>
           </motion.section>
 
@@ -178,21 +186,29 @@ export default function ProjectDetailPage() {
                  <div className="p-2 border border-[var(--border)] rounded-lg bg-[var(--surface)]">
                    <BarChart3 size={24} className="text-[var(--accent)]" />
                  </div>
-                 <h2 className="eyebrow text-[var(--text)] text-[14px]">The Impact // Shipped Outcomes</h2>
+                 <h2 className="eyebrow text-[var(--text)] text-[14px]">Impact Scorecard // Shipped Outcomes</h2>
               </motion.div>
             </div>
-            <ul className="flex flex-col gap-6">
+
+            <div className="grid grid-cols-1 gap-4">
               {project.outcomes.map((outcome, idx) => (
-                <motion.li 
+                <motion.div 
                   key={idx} 
                   variants={cardVariants}
-                  className="flex gap-4 p-6 border border-[var(--border)] bg-[var(--surface)]/50 group hover:border-[var(--accent-border)] transition-colors"
+                  className="group relative p-12 border border-[var(--border)] bg-[var(--surface)] overflow-hidden"
                 >
-                   <span className="text-[var(--accent)] font-mono opacity-40 group-hover:opacity-100 transition-opacity">0{idx + 1}</span>
-                   <p className="body-text text-[16px]">{outcome}</p>
-                </motion.li>
+                   <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity font-black text-9xl italic select-none">
+                      0{idx + 1}
+                   </div>
+                   <div className="relative z-10 flex flex-col gap-6">
+                      <div className="w-12 h-px bg-[var(--accent)]" />
+                      <p className="text-3xl font-bold tracking-tight leading-tight max-w-xl group-hover:text-[var(--accent)] transition-colors">
+                        {outcome}
+                      </p>
+                   </div>
+                </motion.div>
               ))}
-            </ul>
+            </div>
           </motion.section>
         </div>
 

@@ -26,8 +26,28 @@ export function SpotifyPlayer() {
     const handleStart = () => {
       console.log("Audio start event received");
       if (audioRef.current) {
+        audioRef.current.currentTime = 0; // Reset to start
+        audioRef.current.volume = 1;
         audioRef.current.play().then(() => {
           setVinylPlaying(true);
+          
+          // Auto-pause/fade logic for Victory Lap intro
+          setTimeout(() => {
+            if (audioRef.current && !isOpen) { // Only auto-pause if user hasn't opened the player
+               const fadeOut = setInterval(() => {
+                 if (audioRef.current && audioRef.current.volume > 0.05) {
+                   audioRef.current.volume -= 0.05;
+                 } else {
+                   if (audioRef.current) {
+                     audioRef.current.pause();
+                     audioRef.current.volume = 1;
+                   }
+                   setVinylPlaying(false);
+                   clearInterval(fadeOut);
+                 }
+               }, 100);
+            }
+          }, 22000); // Play for 22 seconds (approx intro length)
         }).catch(e => {
           console.warn("Auto-play blocked by browser, user interaction needed", e);
         });

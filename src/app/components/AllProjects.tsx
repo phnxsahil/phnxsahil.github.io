@@ -1,5 +1,5 @@
 import { motion, type Variants } from 'motion/react';
-import { ArrowUpRight, Github } from 'lucide-react';
+import { ArrowUpRight, Github, Activity, ShieldCheck, Box } from 'lucide-react';
 import { projects } from '../data/projects';
 import { Link } from 'react-router';
 
@@ -8,116 +8,124 @@ export function AllProjects() {
 
   const containerVariants: Variants = {
     hidden: {},
-    visible: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } }
+    visible: { transition: { staggerChildren: 0.08 } }
   };
 
   const rowVariants: Variants = {
-    hidden: { opacity: 0, x: -50 },
+    hidden: { opacity: 0, y: 20 },
     visible: { 
       opacity: 1, 
-      x: 0, 
-      transition: { type: "spring", stiffness: 50, damping: 20, mass: 1 } 
+      y: 0, 
+      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } 
     }
   };
 
-  const headerVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 60, damping: 20 } }
-  };
-
   return (
-    <section id="work" className="mx-auto max-w-[1540px] px-6 md:px-12" style={{ paddingTop: 'clamp(80px, 12vh, 160px)', paddingBottom: 'clamp(80px, 12vh, 160px)' }}>
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-20%" }}
-        variants={headerVariants}
-        className="mb-16 flex flex-col gap-6 border-b border-[var(--border)] pb-12 md:mb-20 md:flex-row md:items-end md:justify-between"
-      >
-        <div>
-          <div className="flex items-center gap-[10px] mb-6" style={{ color: 'var(--muted2)' }}>
-            <div style={{ width: '20px', height: '1px', background: 'var(--border-hi)' }} />
-            <span className="eyebrow">
-              Product Index
-            </span>
+    <section id="work" className="mx-auto max-w-[1540px] px-6 md:px-12 py-40">
+      <div className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-[var(--border)] pb-16">
+        <div className="max-w-2xl">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-12 h-px bg-[var(--accent)]" />
+            <span className="eyebrow tracking-[0.3em]" style={{ color: 'var(--accent)' }}>System Index // Archive v4.2</span>
           </div>
-          <h2 className="section-title" style={{ lineHeight: '0.9', textTransform: 'uppercase', fontSize: 'clamp(32px, 4vw, 56px)' }}>
-            Shipped Builds
+          <h2 className="section-title leading-[0.85] tracking-tighter mb-8">
+            Product <br/> <span className="opacity-40 italic font-light">Registry.</span>
           </h2>
+          <p className="body-text text-xl opacity-60 max-w-xl">
+            A comprehensive catalog of engineered systems, from financial distribution layers to AI-driven social discovery engines.
+          </p>
         </div>
-        <p className="body-text max-w-[48ch] text-[15px]">
-          Engineering snapshots of production systems across <span className="text-[var(--text)]">financial infrastructure</span>, <span className="text-[var(--text)]">social discovery</span>, and <span className="text-[var(--text)]">AI automation</span>.
-        </p>
-      </motion.div>
+
+        <div className="flex gap-12 text-[10px] font-mono tracking-[0.2em] uppercase opacity-40">
+           <div className="flex flex-col gap-2">
+              <span className="text-[var(--accent)]">Metric_01</span>
+              <span>99.9% Uptime</span>
+           </div>
+           <div className="flex flex-col gap-2">
+              <span className="text-[var(--accent)]">Metric_02</span>
+              <span>Zero-Downtime CD</span>
+           </div>
+        </div>
+      </div>
 
       <motion.div 
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-20%" }}
+        viewport={{ once: true, margin: "-10%" }}
         variants={containerVariants}
-        className="flex flex-col gap-4"
+        className="flex flex-col border-t border-[var(--border)]"
       >
         {allProjects.map((project) => (
           <motion.article
             key={project.name}
             variants={rowVariants}
-            className="build-row grid grid-cols-1 md:grid-cols-12 md:gap-12 relative group p-6 md:p-8 border border-[var(--border)] hover:bg-[var(--surface)] hover:border-[var(--accent-border)] rounded-sm transition-all duration-500 ease-[var(--ease-premium)]"
+            className="group relative border-b border-[var(--border)] transition-all duration-500 overflow-hidden"
           >
-            <div className="md:col-span-2 transition-transform duration-500 group-hover:translate-x-1">
-              <p className="eyebrow mb-2" style={{ color: 'var(--muted2)' }}>{project.year}</p>
-              <div className="mb-2">
-                <span className="text-[8px] px-2 py-0.5 border border-[var(--accent-border)] bg-[var(--accent-dim)] text-[var(--accent)] font-bold tracking-widest uppercase">
-                  {project.category}
-                </span>
+            <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 py-12 md:py-16 px-4 md:px-8 items-center bg-transparent group-hover:bg-[var(--surface)] transition-colors">
+              
+              {/* Meta Pillar */}
+              <div className="md:col-span-2">
+                <span className="text-[9px] font-mono tracking-[0.3em] opacity-40 mb-4 block">SHIPPED_{project.year}</span>
+                <h3 className="text-2xl font-black uppercase tracking-tighter group-hover:text-[var(--accent)] transition-colors">{project.name}</h3>
+                <div className="mt-4 flex items-center gap-2">
+                   <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
+                   <span className="text-[8px] font-mono tracking-widest uppercase opacity-60">Status: Active_Production</span>
+                </div>
               </div>
-              <h3 className="build-name text-[var(--text)] uppercase text-[18px] font-bold">{project.name}</h3>
-              <p className="eyebrow mt-1" style={{ color: 'var(--muted)', letterSpacing: '0.15em', fontSize: '8px' }}>{project.label}</p>
-            </div>
 
-            <div className="md:col-span-4 self-center transition-transform duration-500 group-hover:translate-x-2">
-              <p className="body-text text-[14px]" style={{ color: 'var(--muted2)' }}>{project.summary}</p>
-            </div>
-
-            <div className="md:col-span-4 self-center md:border-l border-[var(--border)] group-hover:border-[var(--accent-border)] md:pl-8 transition-all duration-500 group-hover:translate-x-3">
-              <p className="eyebrow mb-2" style={{ color: 'var(--muted2)' }}>Technical Highlight</p>
-              <p className="body-text text-[13px] italic mb-3" style={{ color: 'var(--text)' }}>
-                {project.highlight}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {project.stack.map(tech => (
-                  <span key={tech} className="build-stack inline-block border border-[var(--border)] px-2 py-0.5 rounded-sm" style={{ fontSize: '9px', color: 'var(--muted2)' }}>
-                    {tech}
-                  </span>
-                ))}
+              {/* Summary Pillar */}
+              <div className="md:col-span-4">
+                 <p className="body-text text-sm opacity-60 group-hover:opacity-100 transition-opacity leading-relaxed max-w-sm italic">
+                    {project.summary}
+                 </p>
               </div>
-            </div>
 
-            <div className="md:col-span-2 md:text-right self-center flex md:flex-col items-center md:items-end gap-3 md:gap-2 transition-transform duration-500 group-hover:translate-x-4">
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary flex-1 md:flex-none inline-flex items-center justify-center gap-3 border border-[var(--border)] px-4 py-2 text-[9px] tracking-widest font-bold uppercase transition-all hover:bg-[var(--text)] hover:text-[var(--bg)]"
-              >
-                Launch <ArrowUpRight size={14} />
-              </a>
-              {project.github && (
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 border border-[var(--border)] text-[var(--muted2)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all"
-                  title="Source"
-                >
-                  <Github size={14} />
-                </a>
-              )}
-              <Link
-                to={`/project/${project.id}`}
-                className="p-2 eyebrow text-[8px] opacity-40 hover:opacity-100 transition-opacity"
-              >
-                Details
-              </Link>
+              {/* Technical Pillar */}
+              <div className="md:col-span-4 border-l border-[var(--border)] pl-8 flex flex-col gap-6">
+                 <div>
+                    <span className="text-[9px] font-mono tracking-[0.3em] opacity-40 mb-3 block">CORE_SYSTEMS</span>
+                    <div className="flex flex-wrap gap-2">
+                      {project.stack.map(tech => (
+                        <span key={tech} className="text-[9px] font-mono tracking-[0.1em] px-2 py-0.5 border border-[var(--border)] bg-[var(--bg)] rounded-sm opacity-60 group-hover:border-[var(--accent-border)] group-hover:opacity-100 transition-all">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                 </div>
+                 
+                 <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-2 text-[var(--accent)] opacity-40 group-hover:opacity-100 transition-opacity">
+                       <ShieldCheck size={14} />
+                       <span className="text-[8px] font-mono tracking-widest uppercase">Verified Build</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-[var(--accent)] opacity-40 group-hover:opacity-100 transition-opacity">
+                       <Box size={14} />
+                       <span className="text-[8px] font-mono tracking-widest uppercase">Dockerized OS</span>
+                    </div>
+                 </div>
+              </div>
+
+              {/* Actions Pillar */}
+              <div className="md:col-span-2 flex md:flex-col items-center md:items-end gap-4">
+                 <Link to={`/project/${project.id}`} className="w-full md:w-auto px-6 py-3 border border-[var(--border)] group-hover:border-[var(--accent)] text-[9px] font-mono tracking-[0.3em] uppercase flex items-center justify-between gap-4 bg-[var(--bg)] group-hover:bg-[var(--accent)] group-hover:text-black transition-all">
+                    System_Audit
+                    <ArrowUpRight size={14} />
+                 </Link>
+                 
+                 <div className="flex gap-3">
+                    {project.url && (
+                      <a href={project.url} target="_blank" rel="noopener noreferrer" className="p-3 border border-[var(--border)] text-[var(--muted2)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all">
+                        <Activity size={16} />
+                      </a>
+                    )}
+                    {project.github && (
+                      <a href={project.github} target="_blank" rel="noopener noreferrer" className="p-3 border border-[var(--border)] text-[var(--muted2)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all">
+                        <Github size={16} />
+                      </a>
+                    )}
+                 </div>
+              </div>
+
             </div>
           </motion.article>
         ))}
@@ -125,3 +133,5 @@ export function AllProjects() {
     </section>
   );
 }
+
+
