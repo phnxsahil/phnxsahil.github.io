@@ -30,21 +30,21 @@ export function PageTransition({ children }: PageTransitionProps) {
            className="absolute top-0 left-0 w-full h-1/2 bg-[var(--bg)] flex flex-col items-center justify-end overflow-hidden border-b border-[var(--border)]"
         >
            <div 
-             className="text-[var(--accent)] mb-[-0.12em]"
+             className="text-[var(--accent)] mb-[-0.15em] ml-[0.35em]"
              style={{
                fontFamily: 'var(--ff-cabinet), sans-serif',
-               fontSize: 'clamp(64px, 14vw, 280px)',
+               fontSize: 'clamp(80px, 18vw, 360px)',
                fontWeight: 900,
                fontStyle: 'italic',
-               lineHeight: 1
+               lineHeight: 0.8
              }}
            >
-             SAHIL
+             S
            </div>
         </motion.div>
 
         {/* =========================================
-            BOTTOM PANEL — SHARMA 
+            BOTTOM PANEL — S. 
             ========================================= */}
         <motion.div 
            initial={{ y: 0 }}
@@ -53,18 +53,18 @@ export function PageTransition({ children }: PageTransitionProps) {
            className="absolute bottom-0 left-0 w-full h-1/2 bg-[var(--bg)] flex flex-col items-center justify-start overflow-hidden border-t border-[var(--border)]"
         >
            <div 
-             className="mt-[-0.12em]"
+             className="mt-[-0.15em] mr-[0.35em]"
              style={{
                fontFamily: 'var(--ff-cabinet), sans-serif',
-               fontSize: 'clamp(64px, 14vw, 280px)',
+               fontSize: 'clamp(80px, 18vw, 360px)',
                fontWeight: 900,
                color: 'transparent',
                WebkitTextStroke: '2px var(--accent)',
                fontStyle: 'italic',
-               lineHeight: 1
+               lineHeight: 0.8
              }}
            >
-             SHARMA
+             S.
            </div>
         </motion.div>
 

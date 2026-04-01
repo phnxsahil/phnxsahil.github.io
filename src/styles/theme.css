@@ -36,11 +36,12 @@
   --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
   --shadow-glow: 0 0 20px rgba(255,255,255,0.03);
 
-  /* Shared Animation tokens — shifted to longer, liquid glides */
-  --ease-spring: cubic-bezier(0.2, 0, 0, 1);
-  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-smooth: cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-premium: cubic-bezier(0.83, 0, 0.17, 1);
+  /* Softened Liquid Animation tokens — Matt Voyce influence */
+  --ease-spring: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-enter: cubic-bezier(0.2, 0.9, 0.22, 1);
+  --ease-smooth: cubic-bezier(0.3, 0, 0.2, 1);
+  --ease-premium: cubic-bezier(0.4, 0, 0.1, 1); /* Slower, more liquid glide */
+  --ease-fluid: cubic-bezier(0.76, 0, 0.24, 1);   /* True liquid easing */
   --dur-fast: 0.16s;
   --dur-base: 0.32s;
   --hero-vignette: radial-gradient(circle at 35% 50%, rgba(0, 0, 0, 0.85) 0%, transparent 65%);
@@ -59,26 +60,26 @@
   --ff-cabinet: 'Cabinet Grotesk', sans-serif;
 }
 
-/* Light Mode: SOFT CREAM — Refined gallery aesthetic */
+/* Light Mode: SOFT CREAM ARCHIVE — refined, gallery-standard */
 html:not(.dark) {
-  --bg:       #FDFDFA;   /* Ultra polished soft cream */
-  --bg2:      #F7F7F2;   /* Subtle depth */
-  --surface:  #F4F4EE;   /* Card surface */
-  --surface2: #EBEBE5;   /* Hover elevation */
-  --border:    rgba(0,0,0,0.06);   /* Barely there architectural lines */
-  --border-hi: rgba(0,0,0,0.12);   
-  --border-glow: rgba(0,0,0,0.03);
-  --text:   #0a0a0a;     /* Pure clean black */
-  --muted:  #888888;     
-  --muted2: #444444;     
-  --accent:        #000000;   /* Black accents in light mode for extreme class */
-  --accent-dim:    rgba(0,0,0,0.05);
-  --accent-border: rgba(0,0,0,0.15);
-  --glow: rgba(0,0,0,0.01);
-  --hero-vignette: radial-gradient(circle at 35% 50%, rgba(255, 255, 255, 0.4) 0%, transparent 65%);
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.02);
-  --shadow-md: 0 12px 24px -4px rgba(0,0,0,0.04);
-  --shadow-lg: 0 32px 64px -12px rgba(0,0,0,0.06);
+  --bg:       #FDFDFA;   /* Professional off-white paper */
+  --bg2:      #F5F5F2;   /* Subtle depth */
+  --surface:  #F0F0ED;   /* Distinct card surface */
+  --surface2: #E8E8E5;   /* Clear elevation */
+  --border:    rgba(0,0,0,0.08);   /* More subtle, high-end strokes */
+  --border-hi: rgba(0,0,0,0.18);   /* Visible but not harsh */
+  --border-glow: rgba(0,0,0,0.04);
+  --text:   #0A0A0A;     /* Soft black for better readability */
+  --muted:  #70706B;     /* Warm muted gray */
+  --muted2: #30302C;     /* Dark charcoal */
+  --accent:        #0066FF;   /* PRODUCT BLUE - clean, engineering-focused */
+  --accent-dim:    rgba(0, 102, 255, 0.07);
+  --accent-border: rgba(0, 102, 255, 0.25);
+  --glow: rgba(0,0,0,0.02);
+  --hero-vignette: radial-gradient(circle at 35% 50%, rgba(253, 253, 250, 0.6) 0%, transparent 65%);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 12px 20px -3px rgba(0,0,0,0.06);
+  --shadow-lg: 0 30px 60px -12px rgba(0,0,0,0.08);
 }
 
 /* Ticker stays BLACK in light mode — it's the contrast anchor */
@@ -88,7 +89,7 @@ html:not(.dark) .marquee-wrap {
 }
 html:not(.dark) .ticker-item,
 html:not(.dark) .marquee-track span {
-  color: #c8f135 !important; /* Back to acid yellow/green pop on black ticker */
+  color: #0066FF !important;
 }
 
 /* Nav scrolled in light mode */
@@ -121,6 +122,8 @@ html:not(.dark) nav.scrolled {
     font-size: 16px; /* Increased from 15px */
     line-height: 1.8; /* Increased for better flow */
   }
+
+
 
   p {
     font-size: 16px; /* Harmonic bump */

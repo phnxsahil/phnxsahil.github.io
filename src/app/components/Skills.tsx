@@ -65,13 +65,13 @@ export function Skills() {
     visible: { 
       y: "0%", 
       rotate: 0,
-      transition: { type: "spring", stiffness: 60, damping: 20, mass: 1 } 
+      transition: { duration: 1.2, ease: [0.76, 0, 0.24, 1] as any } 
     }
   };
 
   const lineVariants: Variants = {
     hidden: { scaleX: 0 },
-    visible: { scaleX: 1, transition: { type: "spring", stiffness: 50, damping: 20 } }
+    visible: { scaleX: 1, transition: { duration: 1, ease: [0.76, 0, 0.24, 1] as any } }
   };
 
   return (
