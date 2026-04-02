@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from 'react-router';
 import { Hero } from '../components/Hero';
 import { Ticker } from '../components/Ticker';
 import { About } from '../components/About';
-import { PersonalStory } from '../components/PersonalStory';
 import { FeaturedProjects } from '../components/FeaturedProjects';
 import { AllProjects } from '../components/AllProjects';
 import { Skills } from '../components/Skills';
@@ -13,15 +12,9 @@ import { Manifesto } from '../components/Manifesto';
 import { WhyMe } from '../components/WhyMe';
 import { ProductEngineer } from '../components/ProductEngineer';
 export default function HomePage() {
+  const [isLoaded, setIsLoaded] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  
-  // Back to always showing loader on initial component mount
-  const [isLoaded, setIsLoaded] = useState(!!location.state);
-
-  const handleLoaderComplete = () => {
-    setIsLoaded(true);
-  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -30,21 +23,21 @@ export default function HomePage() {
       transition: { 
         staggerChildren: 0.15,
         delayChildren: 0.3,
-        duration: 0.8,
-        ease: [0.22, 1, 0.36, 1] as any
+        duration: 1.2,
+        ease: [0.76, 0, 0.24, 1] as any // ease-fluid
       }
     }
   };
 
   const sectionVariants = {
-    hidden: { opacity: 0, y: 40, filter: 'blur(10px)' },
+    hidden: { opacity: 0, y: 30, filter: 'blur(10px)' },
     visible: { 
       opacity: 1, 
       y: 0,
       filter: 'blur(0px)',
       transition: { 
-        duration: 1.4, 
-        ease: [0.2, 0, 0, 1] as any // soft liquid exit
+        duration: 1.5, 
+        ease: [0.76, 0, 0.24, 1] as any // ease-fluid
       }
     }
   };
@@ -68,7 +61,7 @@ export default function HomePage() {
 
   return (
     <>
-      {!isLoaded && <Loader onComplete={handleLoaderComplete} />}
+      <Loader onComplete={() => setIsLoaded(true)} />
       
       <AnimatePresence mode="wait">
         {isLoaded && (
@@ -87,10 +80,6 @@ export default function HomePage() {
             </motion.div>
 
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }} variants={sectionVariants}>
-              <PersonalStory />
-            </motion.div>
-
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }} variants={sectionVariants}>
               <WhyMe />
             </motion.div>
 
@@ -102,11 +91,13 @@ export default function HomePage() {
               <ProductEngineer />
             </motion.div>
 
+
+
             <Ticker />
 
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }} variants={sectionVariants}>
+            <div className="relative">
               <FeaturedProjects />
-            </motion.div>
+            </div>
 
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }} variants={sectionVariants}>
               <AllProjects />
